@@ -1,5 +1,6 @@
+#[derive(Debug)]
 pub struct Permutation {
-    image : Vec<u32>,
+    pub image : Vec<u32>,
 }
 
 // TODO: Make the element type generic.
