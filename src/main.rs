@@ -1,3 +1,5 @@
+pub mod permutation;
+
 extern crate glob;
 
 use std::error::Error;
@@ -48,14 +50,37 @@ impl Qap {
             weights: arrays[1 + size..1+size*2].to_vec(),
         }
     }
+
+    fn print(&self) {
+
+        let print_vec = |ref vec: &Vec<Vec<f32>>| {
+            for r in vec.iter() {
+                for v in r.iter() {
+                    print!("{:4.1} ", v);
+                }
+                println!("");
+            }
+        };
+
+        println!("QAP {{\n");
+        println!("  size: {},\n", self.size);
+        println!("  dist: ");
+        print_vec(&self.distances);
+        println!(",");
+        println!("  flow: ");
+        print_vec(&self.weights);
+        println!(",");
+        println!("}}\n");
+    }
 }
 
 
 fn main() {
-    for path in glob::glob("data/qapdata/chr1*").unwrap().filter_map(Result::ok) {
+    for path in glob::glob("data/qapdata/chr12a*").unwrap().filter_map(Result::ok) {
         println!("{}", path.display());
 
         let qap = Qap::from_file(&path.to_string_lossy());
 
+        qap.print();
     }
 }
