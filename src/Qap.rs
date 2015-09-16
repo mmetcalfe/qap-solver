@@ -5,21 +5,21 @@ use std::io::prelude::*;
 use permutation::Permutation;
 
 #[derive(Debug)]
-pub struct Qap {
-    size      : usize,
-    distances : Vec<Vec<f32>>,
-    weights   : Vec<Vec<f32>>,
+pub struct Problem {
+    pub size      : usize,
+    pub distances : Vec<Vec<f32>>,
+    pub weights   : Vec<Vec<f32>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Solution {
-    size  : usize,
-    value : f32,
+    pub size  : usize,
+    pub value : f32,
     pub perm  : Permutation,
 }
 
-impl Qap {
-    pub fn from_file(path: &str) -> Qap {
+impl Problem {
+    pub fn from_file(path: &str) -> Problem {
 
         let mut file = match File::open(&path) {
             // The `description` method of `io::Error` returns a string that
@@ -50,7 +50,7 @@ impl Qap {
         // let result = "123".parse::<f32>().unwrap();
         println!("size: {}, len: {} (should be {})", size, arrays.len(), size*2 + 1);
 
-        Qap {
+        Problem {
             size: size,
             distances: arrays[1..][0..size].to_vec(),
             weights: arrays[1..][size..size*2].to_vec(),
@@ -77,7 +77,7 @@ impl Qap {
         println!("}}");
     }
 
-    pub fn value(&self, perm : Permutation) -> f32 {
+    pub fn value(&self, perm : &Permutation) -> f32 {
         // TODO: Profile this method, and make it fast.
 
         let mut sol : f32 = 0.0;
@@ -85,10 +85,19 @@ impl Qap {
             for j in 0..self.size {
                 let pi = perm.image[i] as usize;
                 let pj = perm.image[j] as usize;
+
                 sol += self.distances[i][j] * self.weights[pi][pj];
             }
         }
         sol
+    }
+
+    pub fn solution(&self, perm : &Permutation) -> Solution {
+        Solution {
+            size: perm.image.len(),
+            perm: perm.clone(),
+            value: self.value(perm),
+        }
     }
 }
 

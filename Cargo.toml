@@ -5,3 +5,6 @@ authors = ["Mitchell Metcalfe <mitchell.s.metcalfe@gmail.com>"]
 
 [dependencies]
 glob = "*"
+toml = "0.1"
+rand = "0.3"
+time = "0.1"
