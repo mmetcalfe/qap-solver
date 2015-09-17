@@ -34,26 +34,23 @@ impl Problem {
             panic!("couldn't read {}: {}", path, Error::description(&why))
         }
 
-        let arrays : Vec<_> = input.lines()
-            .map(|l| {
-              l.trim()
-              .split(' ')
-              .map(|s| s.parse::<f32>())
-              .filter_map(Result::ok)
-              .collect::<Vec<_>>()
-            })
-            .filter(|a| a.len() != 0)
+        let values : Vec<_> = input.trim()
+            .split(|c| " \n".contains(c))
+            .map(|s| s.parse::<f32>())
+            .filter_map(Result::ok)
             .collect();
 
-        let size = arrays[0][0] as usize;
+        let size = values[0] as usize;
+
+        let arrays : Vec<_> = values[1..].chunks(size).map(|c| c.to_vec()).collect();
 
         // let result = "123".parse::<f32>().unwrap();
-        println!("size: {}, len: {} (should be {})", size, arrays.len(), size*2 + 1);
+        println!("size: {}, len: {} (should be {})", size, arrays.len(), size*2);
 
         Problem {
             size: size,
-            distances: arrays[1..][0..size].to_vec(),
-            weights: arrays[1..][size..size*2].to_vec(),
+            distances: arrays[0..size].to_vec(),
+            weights: arrays[size..size*2].to_vec(),
         }
     }
 
@@ -112,13 +109,14 @@ impl Solution {
             panic!("couldn't read {}: {}", path, Error::description(&why))
         }
 
-        println!("{:?}", input);
+        // println!("{:?}", input);
 
         let value_strings : Vec<_> = input.trim()
             .split(|c| " \n".contains(c))
+            .filter(|s| s.len() != 0)
             .collect();
 
-        println!("{:?}", value_strings);
+        // println!("{:?}", value_strings);
 
         let size = match value_strings[0].parse::<usize>() {
             Ok(val)  => val,

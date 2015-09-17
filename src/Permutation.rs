@@ -1,6 +1,6 @@
 extern crate rand;
 use self::rand::Rng;
-use std::num;
+// use std::num;
 
 #[derive(Debug, Clone)]
 pub struct Permutation {

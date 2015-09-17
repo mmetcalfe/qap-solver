@@ -2,9 +2,8 @@ use qap;
 use permutation::Permutation;
 use time::SteadyTime;
 use time::Duration;
-use std::num;
 extern crate rand;
-use self::rand::Rng;
+// use self::rand::Rng;
 
 pub fn temperature(progress : f32) -> f32{
     (1.0 - progress) * 50000.0 // linear cooling schedule
@@ -36,8 +35,11 @@ pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
     let mut soln = problem.solution(&init_perm);
     let mut best_soln = soln.clone();
 
+    let mut num_steps = 0;
     let start = SteadyTime::now();
     while SteadyTime::now() - start < duration {
+        num_steps += 1;
+
         let elapsed = SteadyTime::now() - start;
         let progress = duration_ratio(elapsed, duration);
 
@@ -56,6 +58,7 @@ pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
             }
         }
     }
+    println!("sa_search, num_steps: {}", num_steps);
 
     best_soln
 }

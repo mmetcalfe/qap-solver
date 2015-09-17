@@ -1,6 +1,6 @@
 use qap;
 use permutation::Permutation;
-use time::SteadyTime;
+// use time::SteadyTime;
 use time::Duration;
 
 pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
@@ -9,7 +9,9 @@ pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
     let mut soln = Permutation::random(size);
     let mut value = problem.value(&soln);
 
+    let mut num_steps = 0;
     loop {
+        num_steps += 1;
         println!("basic_search: {}", value);
 
         let mut improvement = false;
@@ -32,6 +34,7 @@ pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
             break;
         }
     }
+    println!("basic_search, num_steps: {}", num_steps);
 
     qap::Solution {
         size: size,
