@@ -99,9 +99,9 @@ impl Problem {
 }
 
 impl Solution {
-    pub fn from_file(path: &str) -> Solution {
+    pub fn from_file(path: &str) -> Option<Solution> {
         let mut file = match File::open(&path) {
-            Err(why) => panic!("couldn't open {}: {}", path, Error::description(&why)),
+            Err(why) => return None, // panic!("couldn't open {}: {}", path, Error::description(&why)),
             Ok(file) => file,
         };
         let mut input = String::new();
@@ -112,11 +112,11 @@ impl Solution {
         // println!("{:?}", input);
 
         let value_strings : Vec<_> = input.trim()
-            .split(|c| " \n".contains(c))
+            .split(|c| ", \n".contains(c))
             .filter(|s| s.len() != 0)
             .collect();
 
-        // println!("{:?}", value_strings);
+        println!("{:?}", value_strings);
 
         let size = match value_strings[0].parse::<usize>() {
             Ok(val)  => val,
@@ -127,16 +127,19 @@ impl Solution {
             Err(why) => panic!("Couldn't parse value {}: {}", value_strings[1], Error::description(&why)),
         };
 
-        let image : Vec<_> = value_strings[2..].iter()
+        let mut image : Vec<_> = value_strings[2..].iter()
               .map(|s| s.parse::<u32>())
               .filter_map(Result::ok)
-              .map(|v| v - 1) // convert to 0-based indexing
             .collect();
 
-        Solution {
+        if !image.contains(&0) {
+            image = image.iter().map(|v| v - 1).collect();
+        }
+
+        Some(Solution {
             size: size,
             value: value,
             perm: Permutation::from_image(image),
-        }
+        })
     }
 }

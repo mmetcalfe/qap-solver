@@ -8,23 +8,33 @@ pub mod ea_search;
 extern crate glob;
 extern crate time;
 extern crate rand;
+extern crate regex;
 
 use time::Duration;
+use regex::Regex;
 
 fn main() {
-    for path in glob::glob("data/qapdata/lipa70b*").unwrap().filter_map(Result::ok) {
+    for path in glob::glob("data/qapdata/*.dat").unwrap().filter_map(Result::ok) {
         println!("{}", path.display());
 
         let path_str = path.to_string_lossy();
         let problem = qap::Problem::from_file(&path_str);
         // problem.print();
 
-        // let sln_str = path_str[..path_str.len()-3].to_string() + "sln";
-        let solution = qap::Solution::from_file("data/qapsoln/lipa70b.sln");
-        println!("{:?}", solution);
-        println!("Value (calculated): {:?}", problem.value(&solution.perm));
+        let re = Regex::new(r".*/(?P<prob_name>.*).dat").unwrap();
+        let sln_name = re.captures(&path_str).unwrap().name("prob_name").unwrap();
+        let sln_path_str = format!("data/qapsoln/{}.sln", sln_name);
+        let solution = qap::Solution::from_file(&sln_path_str);
 
-        let duration = Duration::seconds(60);
+        if solution.is_some() {
+            let sln = solution.unwrap();
+            println!("{:?}", sln);
+            println!("Value (calculated): {:?}", problem.value(&sln.perm));
+        } else {
+            println!("Solution unknown.");
+        }
+
+        let duration = Duration::milliseconds(200);
 
         // let random_search_result = random_search::solve(&problem, duration);
         // println!("random_search_result: {:?}", random_search_result);
