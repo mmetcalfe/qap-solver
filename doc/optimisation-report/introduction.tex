@@ -10,12 +10,11 @@ More formally, the matrix \([r_{ki}]\) contains the known revenue each plant \(k
 The matrix \([a_{kl}]\) contains the required commodity flow between plant \(k\) and plant \(l\), and the matrix \([b_{ij}]\) contains the cost of transport per unit flow between location \(i\) and location \(j\). These are often referred to as the flow matrix and the distance matrix, respectively.
 The problem is then to find a permutation \(\pi^{*} \in S_n\) (\(S_n\) is the symmetric group of order \(n\)) that maximises the total revenue:
 
-% TODO: Check the indices!
-\[ \pi^{*} = \max_{\pi} \left(\sum_{k}{a_{k\pi(k)}} - \sum_{k}\sum_{l}{a_{kl}b_{\pi(k)\pi(l)}}\right) \]
+\[ \pi^{*} = \max_{\pi} \left(\sum_{k}{r_{k\pi(k)}} - \sum_{k}\sum_{l}{a_{kl}b_{\pi(k)\pi(l)}}\right) \]
 
 where  \(\pi(k) = i\) indicates that plant \(k\) is to be placed at location \(i\).
 
-Many authors ignore the linear term \(\sum_{k}{a_{k\pi(k)}}\), both because it is not necessary in some applications, and because it does not significantly increase the difficulty of the problem. For this reason, the QAP is often expressed as a minimisation problem as presented in \eqref{eq:qap}.
+Many authors ignore the linear term \(\sum_{k}{r_{k\pi(k)}}\), both because it is not necessary in some applications, and because it does not significantly increase the difficulty of the problem. For this reason, the QAP is often expressed as a minimisation problem as presented in \eqref{eq:qap}.
 
 \begin{equation}
     \label{eq:qap}
@@ -25,21 +24,31 @@ Many authors ignore the linear term \(\sum_{k}{a_{k\pi(k)}}\), both because it i
 \citeauthor{Koopmans:1957gf} established the place of the QAP as a difficult NP-Hard problem by indicating that the Travelling Salesman Problem can be expressed as a special case. The QAP has since been referred to as ``one of the most difficult problems in the NP-hard class'' \citep{Loiola:2007jk}, and has attracted much research attention due to its difficulty making it an attractive benchmark for newly developed generic optimisation algorithms and metaheuristics, due to its theoretical importance, and due to its many practical applications.
 \citet{Loiola:2007jk} gives a detailed survey of approaches and applications of the QAP, referencing 365 papers published between its introduction in 1957 up until 2007. We discuss some more recent applications and solution approaches in Section~\ref{sec:applications} and Section~\ref{sec:approaches} respectively.
 
-\subsection{Applications} {
+\subsection{Recent Applications} {
     \label{sec:applications}
 
-    % Mention applications listed by \citet{Loiola:2007jk}.
+	\citeauthor{Koopmans:1957gf} uses the application of optimally locating manufacturing plants to maximise revenue to motivate the QAP. This problem is sometimes called the Facilities Layout Problem (FLP), and is the most common application of the QAP \citep{Loiola:2007jk}.
+	\citet{Samanta:2015hk} used the QAP in the layout optimisation of a bus body manufacturing plant.
+	\citet{XiongfengFeng:2015jo} recently used the QAP to improve the layout of departments in a hospital. They were able to decrease the average walking time for outpatients by 11.55\%.
 
-    % Mention \citep{Bhati:2014as} in the intro, then state that specific examples follow.
+	The QAP has applications beyond instances of the FLP.
+	Recently, \citep{Alguliyev:2015jw} used it in the unsupervised generation of summaries of documents.
+	\citet{Azab:2015eq} applied the QAP to a problem in manufacturing that required optimisation of the sequence in which features of a product would be machined in order to minimise handling time, given a set of precedence constraints between features.
 
-    Mention \citep{XiongfengFeng:2015jo} as a recent example of hospital layout.
+	% While the application of optimally locating manufacturing plants to maximise revenue that \citeauthor{Koopmans:1957gf} used to motivate the QAP is useful, many additional practical applications have been found since.
+
+	% \citet{Loiola:2007jk} lists many publications that apply the QAP to practical problems, including the
+
+	% Mention applications listed by \citet{Loiola:2007jk}.
+
+	% Mention \citep{Bhati:2014as} in the intro, then state that specific examples follow.
 
 }
 
-\subsection{Existing approaches} {
+\subsection{Current approaches} {
     \label{sec:approaches}
 
-	\todo{define steepest descent search}
+	% \todo{define steepest descent search}
 
     % Use Merz:1999kl as an example of papers that compare methods using the QAP.
 
