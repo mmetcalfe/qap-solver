@@ -4,10 +4,11 @@
 % }
 
 The Quadratic Assignment Problem (QAP) was introduced by \citet{Koopmans:1957gf}, motivated by the problem of optimally assigning manufacturing plants to locations in a way that maximises total revenue.
-The given a matrix of revenues that plants will generate in different locations, a matrix of distances between the locations, and a `flow' matrix containing the quantity of commodity bundles that must be transported between plants per time unit.
+This problem is complicated by the fact that it is known that each plant will generate different revenue when placed in each location, and that each pair of plants requires a given quantity of commodity bundles to be transported between plants per time unit, at a cost proportional to the distance they travel.
+% The given a matrix of revenues that plants will generate in different locations, a matrix of distances between the locations, and a `flow' matrix containing the quantity of commodity bundles that must be transported between plants per time unit.
 
-More formally, the matrix \([r_{ki}]\) contains the known revenue each plant \(k\) will have a when placed at location \(i\).
-The matrix \([a_{kl}]\) contains the required commodity flow between plant \(k\) and plant \(l\), and the matrix \([b_{ij}]\) contains the cost of transport per unit flow between location \(i\) and location \(j\). These are often referred to as the flow matrix and the distance matrix, respectively.
+More formally, a matrix \([r_{ki}]\) contains the known revenue each plant \(k\) will have when placed at location \(i\).
+A \newterm{flow matrix} \([a_{kl}]\) contains the required commodity flow between plant \(k\) and plant \(l\), and a \newterm{distance matrix} \([b_{ij}]\) contains the cost of transport per unit flow between location \(i\) and location \(j\). % These are often referred to as the flow matrix and the distance matrix, respectively.
 The problem is then to find a permutation \(\pi^{*} \in S_n\) (\(S_n\) is the symmetric group of order \(n\)) that maximises the total revenue:
 
 \[ \pi^{*} = \max_{\pi} \left(\sum_{k}{r_{k\pi(k)}} - \sum_{k}\sum_{l}{a_{kl}b_{\pi(k)\pi(l)}}\right) \]
@@ -54,7 +55,7 @@ Many authors ignore the linear term \(\sum_{k}{r_{k\pi(k)}}\), both because it i
 
     % Discuss the comparison of memory schemas used in \citet{Meneses:2011hg}.
 
-	\citet{Meneses:2011hg} investigated the effects of different memory schemas on the performance of the memetic algorithm for the QAP described in \citet{Inostroza:2008md}.
+	\citet{Meneses:2011hg} investigated the effects of different memory schemas on the performance of the memetic algorithm \citep{Neri:2012jr} for the QAP described in \citet{Inostroza:2008md}.
 	\citeauthor{Meneses:2011hg} uses a structured population based on a ternary tree introduced by \citet{Inostroza:2008md}. This structure is considered to be a long-term memory schema, as it is used to guide the interaction of individuals in the algorithm.
 	Four other memory schemas are considered in their comparisons; Fixed Tabu List \citep{glover1989tabu}, Variable Tabu List (VTL), Reduced Search (RS), and greedy Steepest Descent search (SD).
 	Steepest Descent search repeatedly improves a solution by moving to the best solution in its 2-swap neighbourhood until a local maximum is found. The greedy variant used by \citeauthor{Meneses:2011hg} simply moves to the first improving solution rather than finding the best neighbouring solution.
@@ -70,10 +71,9 @@ Many authors ignore the linear term \(\sum_{k}{r_{k\pi(k)}}\), both because it i
 	% Describe the controlled chained mutation
 
 	\citet{Misevicius:2012dj} proposed an implementation of the Iterated Tabu Search (ITS) algorithm for the QAP.
-	The ITS algorithm begins by generating a random solution and improving it using tabu search. Then, for a given number of iterations, it repeatedly applies a mutation operation to the current solution before improving it again, always saving the best solution found so far to be returned as its result. The mutation operator and intensification strategies used by ITS are intended to overcome the `stagnant behaviour' that typically occurs when using algorithms based on tabu search.
+	The ITS algorithm begins by generating a random solution and improving it using tabu search. Then, for a given number of iterations, it repeatedly applies a mutation operation to the current solution before improving it again, always saving the best solution found so far to be returned as its result. The mutation operator and intensification strategies used by ITS are intended to overcome the `stagnant behaviour' (eventual lack of progress) that typically occurs when using algorithms based on tabu search.
 
-	The mutation operator used that produces a new permutation with a Hamming distance of \(\mu\) from its input. To do this it randomly generates a number of sequences of \(\mu\) transpositions, ensuring that their composition has the correct Hamming distance from \(\mu\), and ranks each sequence according to a \newterm{disruptiveness} metric. The most disruptive mutation is chosen to produce the result permutation.
-	The number of sequences to generate is a parameter of the algorithm.
+	The mutation operator used produces a new permutation with a Hamming distance of \(\mu\) from its input. To do this it randomly generates a number of sequences of \(\mu\) transpositions, ensuring that their composition has the correct Hamming distance from \(\mu\), and ranks the sequences according to a \newterm{disruptiveness} metric. The number of sequences to generate is a parameter of the algorithm. The most disruptive sequence is chosen to produce the result permutation.
 	The parameter \(\mu\) has an initial value \(\mu_\text{min}\) and is increased on every iteration, and reset to \(\mu_\text{min}\) whenever an improved local optimum is found or a maximum value \(\mu_\text{max}\) is reached.
 
 	The ITS algorithm uses three intensification strategies.
@@ -85,10 +85,9 @@ Many authors ignore the linear term \(\sum_{k}{r_{k\pi(k)}}\), both because it i
 
     % Describe the memetic algorithm in \citet{Harris:2015kw}.
 
-	\todo{Make this section smoother.}
-    \citet{Harris:2015kw} introduces a memetic algorithm to solve the QAP.
-    Their method represents candidate solutions by simply storing the image of the permutations in an array.
+    % Their method represents candidate solutions by simply storing the image of the permutations in an array.
 
+    \citet{Harris:2015kw} introduces a memetic algorithm to solve the QAP.
     The ternary tree memory schema previously introduced in \citet{Inostroza:2008md} is used to structure the population and to guide the other stages of the algorithm.
     The population is divided into 13 nodes which form a complete ternary tree. Each node contains 6 individuals, a \newterm{current} individual, and five \newterm{pocket} individuals.
     This population structure is illustrated in Figure~\ref{fig:ternary-tree}.
@@ -111,7 +110,7 @@ Many authors ignore the linear term \(\sum_{k}{r_{k\pi(k)}}\), both because it i
 
     % BMA \citet{Benlic:2015gp}.
 
-	\citet{Benlic:2015gp} proposed a new memetic algorithm for the QAP called BMA, which uses Breakout Local Search (BLS) as its local search procedure, the CX crossover operator used by \citet{Merz:2000ek}, a fitness-based population replacement strategy, and an adaptive mutation mechanism.
+	\citet{Benlic:2015gp} proposed a new memetic algorithm for the QAP called BMA\footnote{\citeauthor{Benlic:2015gp} do not give an explanation of the acronym BMA.}, which uses Breakout Local Search (BLS) as its local search procedure, the CX crossover operator used by \citet{Merz:2000ek}, a fitness-based population replacement strategy, and an adaptive mutation mechanism.
 
 	BMA first randomly generates an initial population \(P\), before improving each individual using BLS.
 	BLS is a local search procedure that improves a solution by first performing a steepest descent search using the full 2-swap neighbourhood, before applying \(L\) \newterm{peturbation moves} intended to diversify the search. These moves amount to either \(L\) iterations of tabu search, or the application of \(L\) random transpositions to the current solution permutation. The choice of random or tabu search moves is probabilistic, and is based on the number of consecutive non-improving solutions found by the SD search. \(L\) is set to an initial value \(L_0\) plus the number of consecutive visits the SD search has made to the immediate previous local optimum.
