@@ -45,7 +45,7 @@ impl Problem {
         let arrays : Vec<_> = values[1..].chunks(size).map(|c| c.to_vec()).collect();
 
         // let result = "123".parse::<f32>().unwrap();
-        println!("size: {}, len: {} (should be {})", size, arrays.len(), size*2);
+        // println!("size: {}, len: {} (should be {})", size, arrays.len(), size*2);
 
         Problem {
             size: size,
@@ -86,6 +86,19 @@ impl Problem {
                 sol += self.distances[i][j] * self.weights[pi][pj];
             }
         }
+
+        // // Very slightly faster:
+        // for (i, pi) in perm.image.iter().enumerate() {
+        //     for (j, pj) in perm.image.iter().enumerate() {
+        //         // sol += self.distances[i][j] * self.weights[*pi as usize][*pj as usize];
+        //         unsafe {
+        //             let dists_i = self.distances.get_unchecked(i);
+        //             let weights_pi = self.weights.get_unchecked(*pi as usize);
+        //             sol += dists_i.get_unchecked(j) * weights_pi.get_unchecked(*pj as usize);
+        //         }
+        //     }
+        // }
+
         sol
     }
 
@@ -116,7 +129,7 @@ impl Solution {
             .filter(|s| s.len() != 0)
             .collect();
 
-        println!("{:?}", value_strings);
+        // println!("{:?}", value_strings);
 
         let size = match value_strings[0].parse::<usize>() {
             Ok(val)  => val,

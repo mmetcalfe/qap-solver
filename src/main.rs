@@ -1,9 +1,11 @@
+
 pub mod permutation;
 pub mod qap;
 pub mod random_search;
 pub mod basic_search;
 pub mod sa_search;
 pub mod ea_search;
+pub mod tabulist;
 
 extern crate glob;
 extern crate time;
@@ -28,13 +30,13 @@ fn main() {
 
         if solution.is_some() {
             let sln = solution.unwrap();
-            println!("{:?}", sln);
-            println!("Value (calculated): {:?}", problem.value(&sln.perm));
+            // println!("{:?}", sln);
+            // println!("Value (calculated): {:?}", problem.value(&sln.perm));
         } else {
             println!("Solution unknown.");
         }
 
-        let duration = Duration::milliseconds(200);
+        let duration = Duration::milliseconds(100);
 
         // let random_search_result = random_search::solve(&problem, duration);
         // println!("random_search_result: {:?}", random_search_result);
