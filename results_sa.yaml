@@ -1,0 +1,816 @@
+ - { instance_name: bur26a
+, soln_value: 5426670
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.895
+, best_known_solution_value: 5426670
+}
+ - { instance_name: bur26b
+, soln_value: 3824376
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 3817852
+}
+ - { instance_name: bur26c
+, soln_value: 5427346
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.952
+, best_known_solution_value: 5426795
+}
+ - { instance_name: bur26d
+, soln_value: 3821787
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.994
+, best_known_solution_value: 3821225
+}
+ - { instance_name: bur26e
+, soln_value: 5386879
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.984
+, best_known_solution_value: 5386879
+}
+ - { instance_name: bur26f
+, soln_value: 3782222
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.868
+, best_known_solution_value: 3782044
+}
+ - { instance_name: bur26g
+, soln_value: 10118819
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.986
+, best_known_solution_value: 10117172
+}
+ - { instance_name: bur26h
+, soln_value: 7106881
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 3.954
+, best_known_solution_value: 7098658
+}
+ - { instance_name: chr12a
+, soln_value: 9552
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.829
+, best_known_solution_value: 9552
+}
+ - { instance_name: chr12b
+, soln_value: 9742
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.817
+, best_known_solution_value: 9742
+}
+ - { instance_name: chr12c
+, soln_value: 11186
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.874
+, best_known_solution_value: 11156
+}
+ - { instance_name: chr15a
+, soln_value: 9936
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.929
+, best_known_solution_value: 9896
+}
+ - { instance_name: chr15b
+, soln_value: 7990
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.908
+, best_known_solution_value: 7990
+}
+ - { instance_name: chr15c
+, soln_value: 10626
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.689
+, best_known_solution_value: 9504
+}
+ - { instance_name: chr18a
+, soln_value: 11282
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.924
+, best_known_solution_value: 11098
+}
+ - { instance_name: chr18b
+, soln_value: 1562
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.995
+, best_known_solution_value: 1534
+}
+ - { instance_name: chr20a
+, soln_value: 2688
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.986
+, best_known_solution_value: 2192
+}
+ - { instance_name: chr20b
+, soln_value: 2766
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.986
+, best_known_solution_value: 2298
+}
+ - { instance_name: chr20c
+, soln_value: 16544
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.91
+, best_known_solution_value: 14142
+}
+ - { instance_name: chr22a
+, soln_value: 6498
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.997
+, best_known_solution_value: 6156
+}
+ - { instance_name: chr22b
+, soln_value: 6512
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.991
+, best_known_solution_value: 6194
+}
+ - { instance_name: chr25a
+, soln_value: 5110
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.991
+, best_known_solution_value: 3796
+}
+ - { instance_name: els19
+, soln_value: 17937026
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.033
+, best_known_solution_value: 17212548
+}
+ - { instance_name: esc128
+, soln_value: 226
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 3.773
+, best_known_solution_value: 64
+}
+ - { instance_name: esc16a
+, soln_value: 68
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.116
+, best_known_solution_value: 68
+}
+ - { instance_name: esc16b
+, soln_value: 292
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.022
+, best_known_solution_value: 292
+}
+ - { instance_name: esc16c
+, soln_value: 160
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 1.425
+, best_known_solution_value: 160
+}
+ - { instance_name: esc16d
+, soln_value: 16
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 1.103
+, best_known_solution_value: 16
+}
+ - { instance_name: esc16e
+, soln_value: 28
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.024
+, best_known_solution_value: 28
+}
+ - { instance_name: esc16f
+, soln_value: 0
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0
+, best_known_solution_value: 0
+}
+ - { instance_name: esc16g
+, soln_value: 26
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.8
+, best_known_solution_value: 26
+}
+ - { instance_name: esc16h
+, soln_value: 996
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.053
+, best_known_solution_value: 996
+}
+ - { instance_name: esc16i
+, soln_value: 14
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.043
+, best_known_solution_value: 14
+}
+ - { instance_name: esc16j
+, soln_value: 8
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.04
+, best_known_solution_value: 8
+}
+ - { instance_name: esc32a
+, soln_value: 192
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: inf
+}
+ - { instance_name: esc32b
+, soln_value: 284
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: inf
+}
+ - { instance_name: esc32c
+, soln_value: 666
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: inf
+}
+ - { instance_name: esc32d
+, soln_value: 226
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 5
+, best_known_solution_value: inf
+}
+ - { instance_name: esc32e
+, soln_value: 2
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.032
+, best_known_solution_value: 2
+}
+ - { instance_name: esc32g
+, soln_value: 6
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.128
+, best_known_solution_value: 6
+}
+ - { instance_name: esc32h
+, soln_value: 490
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: inf
+}
+ - { instance_name: esc64a
+, soln_value: 162
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 1.223
+, best_known_solution_value: inf
+}
+ - { instance_name: had12
+, soln_value: 1660
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.682
+, best_known_solution_value: 1652
+}
+ - { instance_name: had14
+, soln_value: 2724
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 2724
+}
+ - { instance_name: had16
+, soln_value: 3722
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 3720
+}
+ - { instance_name: had18
+, soln_value: 5358
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 5358
+}
+ - { instance_name: had20
+, soln_value: 6930
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 6922
+}
+ - { instance_name: kra30a
+, soln_value: 90260
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.973
+, best_known_solution_value: 88900
+}
+ - { instance_name: kra30b
+, soln_value: 92740
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.987
+, best_known_solution_value: 91420
+}
+ - { instance_name: kra32
+, soln_value: 91020
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.981
+, best_known_solution_value: 88900
+}
+ - { instance_name: lipa20a
+, soln_value: 3789
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 3683
+}
+ - { instance_name: lipa20b
+, soln_value: 27076
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.986
+, best_known_solution_value: 27076
+}
+ - { instance_name: lipa30a
+, soln_value: 13481
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 13178
+}
+ - { instance_name: lipa30b
+, soln_value: 175429
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.99
+, best_known_solution_value: 151426
+}
+ - { instance_name: lipa40a
+, soln_value: 32186
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 31538
+}
+ - { instance_name: lipa40b
+, soln_value: 476581
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.951
+, best_known_solution_value: 476581
+}
+ - { instance_name: lipa50a
+, soln_value: 63311
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 62093
+}
+ - { instance_name: lipa50b
+, soln_value: 1425294
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.972
+, best_known_solution_value: 1210244
+}
+ - { instance_name: lipa60a
+, soln_value: 108897
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 107218
+}
+ - { instance_name: lipa60b
+, soln_value: 3013567
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.922
+, best_known_solution_value: 2520135
+}
+ - { instance_name: lipa70a
+, soln_value: 172382
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 169755
+}
+ - { instance_name: lipa70b
+, soln_value: 5549515
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.951
+, best_known_solution_value: 4603200
+}
+ - { instance_name: lipa80a
+, soln_value: 256715
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 253195
+}
+ - { instance_name: lipa80b
+, soln_value: 9430162
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.948
+, best_known_solution_value: 7763962
+}
+ - { instance_name: lipa90a
+, soln_value: 365497
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 5
+, best_known_solution_value: 360630
+}
+ - { instance_name: lipa90b
+, soln_value: 15166092
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.996
+, best_known_solution_value: 12490441
+}
+ - { instance_name: nug12
+, soln_value: 586
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 578
+}
+ - { instance_name: nug14
+, soln_value: 1022
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.998
+, best_known_solution_value: 1014
+}
+ - { instance_name: nug15
+, soln_value: 1176
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 1150
+}
+ - { instance_name: nug16a
+, soln_value: 1622
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 1610
+}
+ - { instance_name: nug16b
+, soln_value: 1282
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 1240
+}
+ - { instance_name: nug17
+, soln_value: 1784
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 1732
+}
+ - { instance_name: nug18
+, soln_value: 1974
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 1930
+}
+ - { instance_name: nug20
+, soln_value: 2618
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 2570
+}
+ - { instance_name: nug21
+, soln_value: 2536
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 2438
+}
+ - { instance_name: nug22
+, soln_value: 3618
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 3596
+}
+ - { instance_name: nug24
+, soln_value: 3612
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 3488
+}
+ - { instance_name: nug25
+, soln_value: 3876
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 3744
+}
+ - { instance_name: nug27
+, soln_value: 5374
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.998
+, best_known_solution_value: 5234
+}
+ - { instance_name: nug28
+, soln_value: 5394
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 5166
+}
+ - { instance_name: nug30
+, soln_value: 6492
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 6124
+}
+ - { instance_name: rou12
+, soln_value: 235528
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.369
+, best_known_solution_value: 235528
+}
+ - { instance_name: rou15
+, soln_value: 354210
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.674
+, best_known_solution_value: 354210
+}
+ - { instance_name: rou20
+, soln_value: 734648
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.726
+, best_known_solution_value: 725522
+}
+ - { instance_name: scr12
+, soln_value: 31410
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 3.851
+, best_known_solution_value: 31410
+}
+ - { instance_name: scr15
+, soln_value: 51140
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.876
+, best_known_solution_value: 51140
+}
+ - { instance_name: scr20
+, soln_value: 111726
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.903
+, best_known_solution_value: 110030
+}
+ - { instance_name: sko100a
+, soln_value: 162728
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 152002
+}
+ - { instance_name: sko100b
+, soln_value: 164622
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 153890
+}
+ - { instance_name: sko100c
+, soln_value: 158974
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 147862
+}
+ - { instance_name: sko100d
+, soln_value: 159436
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 149576
+}
+ - { instance_name: sko100e
+, soln_value: 159702
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 149150
+}
+ - { instance_name: sko100f
+, soln_value: 159676
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 149036
+}
+ - { instance_name: sko42
+, soln_value: 16648
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 15812
+}
+ - { instance_name: sko49
+, soln_value: 24502
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 23386
+}
+ - { instance_name: sko56
+, soln_value: 36148
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 34458
+}
+ - { instance_name: sko64
+, soln_value: 51628
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 48498
+}
+ - { instance_name: sko72
+, soln_value: 70240
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 66256
+}
+ - { instance_name: sko81
+, soln_value: 97186
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 90998
+}
+ - { instance_name: sko90
+, soln_value: 123814
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 115534
+}
+ - { instance_name: ste36a
+, soln_value: 10220
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 9526
+}
+ - { instance_name: ste36b
+, soln_value: 16516
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 15852
+}
+ - { instance_name: ste36c
+, soln_value: 8249952
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 2.942
+, best_known_solution_value: 8239110
+}
+ - { instance_name: tai100a
+, soln_value: 21817314
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.758
+, best_known_solution_value: 21052466
+}
+ - { instance_name: tai100b
+, soln_value: 1228644600
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.962
+, best_known_solution_value: inf
+}
+ - { instance_name: tai10a
+, soln_value: 135028
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 2.969
+, best_known_solution_value: inf
+}
+ - { instance_name: tai10b
+, soln_value: 1183760
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.002
+, best_known_solution_value: inf
+}
+ - { instance_name: tai12a
+, soln_value: 224416
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.4
+, best_known_solution_value: 224416
+}
+ - { instance_name: tai12b
+, soln_value: 43468536
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0
+, best_known_solution_value: 39464924
+}
+ - { instance_name: tai150b
+, soln_value: 511898340
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.996
+, best_known_solution_value: 498896640
+}
+ - { instance_name: tai15a
+, soln_value: 388214
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.735
+, best_known_solution_value: 388214
+}
+ - { instance_name: tai15b
+, soln_value: 51765268
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.029
+, best_known_solution_value: 51765268
+}
+ - { instance_name: tai17a
+, soln_value: 496330
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.831
+, best_known_solution_value: 491812
+}
+ - { instance_name: tai20a
+, soln_value: 709080
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.717
+, best_known_solution_value: 703482
+}
+ - { instance_name: tai20b
+, soln_value: 151584260
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.001
+, best_known_solution_value: 122455320
+}
+ - { instance_name: tai256c
+, soln_value: 45143212
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.894
+, best_known_solution_value: 44759292
+}
+ - { instance_name: tai25a
+, soln_value: 1192880
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.833
+, best_known_solution_value: 1167256
+}
+ - { instance_name: tai25b
+, soln_value: 448603460
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.002
+, best_known_solution_value: 344355650
+}
+ - { instance_name: tai30a
+, soln_value: 1867306
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.752
+, best_known_solution_value: 1818146
+}
+ - { instance_name: tai30b
+, soln_value: 766312600
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.444
+, best_known_solution_value: 637117100
+}
+ - { instance_name: tai35a
+, soln_value: 2485182
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.649
+, best_known_solution_value: 2422002
+}
+ - { instance_name: tai35b
+, soln_value: 292608060
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.11
+, best_known_solution_value: inf
+}
+ - { instance_name: tai40a
+, soln_value: 3241732
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.812
+, best_known_solution_value: 3139370
+}
+ - { instance_name: tai40b
+, soln_value: 700737800
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.065
+, best_known_solution_value: inf
+}
+ - { instance_name: tai50a
+, soln_value: 5075716
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.905
+, best_known_solution_value: 4938796
+}
+ - { instance_name: tai50b
+, soln_value: 477165400
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 0.373
+, best_known_solution_value: 458821500
+}
+ - { instance_name: tai60a
+, soln_value: 7468980
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.945
+, best_known_solution_value: 7205962
+}
+ - { instance_name: tai60b
+, soln_value: 657890400
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.373
+, best_known_solution_value: 608215040
+}
+ - { instance_name: tai64c
+, soln_value: 1855928
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 3.409
+, best_known_solution_value: 1855928
+}
+ - { instance_name: tai80a
+, soln_value: 13951626
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.797
+, best_known_solution_value: 13499184
+}
+ - { instance_name: tai80b
+, soln_value: 858902850
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 3.746
+, best_known_solution_value: inf
+}
+ - { instance_name: tho150
+, soln_value: 8389778
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.997
+, best_known_solution_value: 8133398
+}
+ - { instance_name: tho30
+, soln_value: 150920
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.974
+, best_known_solution_value: 149936
+}
+ - { instance_name: tho40
+, soln_value: 244982
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.996
+, best_known_solution_value: 240516
+}
+ - { instance_name: wil100
+, soln_value: 283802
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 273038
+}
+ - { instance_name: wil50
+, soln_value: 50066
+, running_time_seconds: 5
+, time_to_best_solution_seconds: 4.999
+, best_known_solution_value: 48816
+}
