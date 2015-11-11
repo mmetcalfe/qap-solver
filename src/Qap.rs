@@ -1,10 +1,15 @@
 use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
+extern crate rand;
+use rand::Rng;
+use time::Duration;
+use std::f32;
+use std::fs::OpenOptions;
 
 use permutation::Permutation;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Problem {
     pub size      : usize,
     pub distances : Vec<Vec<f32>>,
@@ -18,7 +23,98 @@ pub struct Solution {
     pub perm  : Permutation,
 }
 
+#[derive(Debug, Clone)]
+pub struct SearchResult {
+    pub solution  : Solution,
+    pub best_known_solution : Option<Solution>,
+    pub running_time_seconds : f32,
+    pub instance_name : String,
+    pub time_to_best_solution_seconds : f32,
+}
+
+impl SearchResult {
+    pub fn new(best_soln : Solution, search_duration : Duration, best_soln_duration : Duration) -> SearchResult {
+        let total_time_seconds = (search_duration.num_milliseconds() as f32)/1000.0;
+        let best_soln_seconds = (best_soln_duration.num_milliseconds() as f32)/1000.0;
+        SearchResult {
+            solution: best_soln,
+            running_time_seconds: total_time_seconds,
+            best_known_solution: Option::None,
+            instance_name: String::new(),
+            time_to_best_solution_seconds: best_soln_seconds,
+        }
+    }
+
+    pub fn append_to_file(&self, fname : &str) {
+        let mut file = OpenOptions::new()
+                            .create(true)
+                            .write(true)
+                            .append(true)
+                            .open(fname)
+                            .unwrap();
+
+        let mut best_known_solution_value = f32::INFINITY;
+        if self.best_known_solution.is_some() {
+            let sln = self.best_known_solution.clone().unwrap();
+            best_known_solution_value = sln.value;
+        }
+
+        writeln!(file, " - {{ instance_name: {}", self.instance_name);
+        writeln!(file, ", soln_value: {}", self.solution.value);
+        writeln!(file, ", running_time_seconds: {}", self.running_time_seconds);
+        writeln!(file, ", time_to_best_solution_seconds: {}", self.time_to_best_solution_seconds);
+        writeln!(file, ", best_known_solution_value: {}", best_known_solution_value);
+        writeln!(file, "}}");
+    }
+}
+
 impl Problem {
+    pub fn random(size : usize) -> Problem {
+        let mut distances : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
+        let mut weights : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
+        let mut rng = rand::thread_rng();
+        for i in 0..size {
+            for j in 0..size {
+                distances[i][j] = rng.gen();
+                weights[i][j] = rng.gen();
+            }
+        }
+
+        for k in 0..size {
+            distances[k][k] = 0.0;
+            weights[k][k] = 0.0;
+        }
+
+        Problem {
+            size: size,
+            distances: distances,
+            weights: weights
+        }
+    }
+
+    pub fn random_integral(size : usize) -> Problem {
+        let mut distances : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
+        let mut weights : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
+        let mut rng = rand::thread_rng();
+        for i in 0..size {
+            for j in 0..size {
+                distances[i][j] = rng.gen_range(0 as usize, 2*size) as f32;
+                weights[i][j] = rng.gen_range(0 as usize, 2*size) as f32;
+            }
+        }
+
+        for k in 0..size {
+            distances[k][k] = 0.0;
+            weights[k][k] = 0.0;
+        }
+
+        Problem {
+            size: size,
+            distances: distances,
+            weights: weights
+        }
+    }
+
     pub fn from_file(path: &str) -> Problem {
 
         let mut file = match File::open(&path) {
@@ -102,6 +198,68 @@ impl Problem {
         sol
     }
 
+    pub fn solution_value_difference(&self, perm : &Permutation, transp : (usize, usize)) -> f32 {
+        let (i, j) = transp;
+
+        let a = &self.distances;
+        let b = &self.weights;
+        let p = &perm.image;
+
+        let pi = p[i] as usize;
+        let pj = p[j] as usize;
+
+        let mut diff = (a[i][i] - a[j][j]) * (b[pj][pj] - b[pi][pj]) +
+                       (a[i][j] - a[j][i]) * (b[pj][pi] - b[pi][pj]);
+
+        for k in (0..p.len()) {
+            let pk = p[k] as usize;
+
+            if k != i && k != j {
+                diff += (a[i][k] - a[j][k]) * (b[pj][pk] - b[pi][pk]) +
+                        (a[k][i] - a[k][j]) * (b[pk][pj] - b[pk][pi]);
+            }
+        }
+
+        diff
+    }
+
+    pub fn compute_neighbourhood_delta_matrix_very_slow(&self, perm : &Permutation) -> Vec<f32> {
+        let M = self.size*(self.size-1)/2;
+        let mut delta_matrix = Vec::with_capacity(self.size);
+
+        let soln_value = self.value(perm);
+
+        for m in 0..M {
+            let transp = Permutation::triangle_index(m);
+
+            let neighbour = Permutation::apply_transposition(perm.clone(), transp);
+            let neighbour_value = self.value(&neighbour);
+
+            delta_matrix.push(neighbour_value - soln_value);
+        }
+        delta_matrix
+    }
+
+    pub fn compute_neighbourhood_delta_matrix(&self, perm : &Permutation) -> Vec<f32> {
+        let M = self.size*(self.size-1)/2;
+        let mut delta_matrix = Vec::with_capacity(self.size);
+        for m in 0..M {
+            let transp = Permutation::triangle_index(m);
+            delta_matrix.push(self.solution_value_difference(&perm, transp));
+        }
+        delta_matrix
+    }
+
+    pub fn transposition_neighbourhood(&self, perm : &Permutation) -> Vec<(usize,usize)> {
+        let M = self.size*(self.size-1)/2;
+        let mut transpositions = Vec::with_capacity(self.size);
+        for m in 0..M {
+            let transp = Permutation::triangle_index(m);
+            transpositions.push(transp);
+        }
+        transpositions
+    }
+
     pub fn solution(&self, perm : &Permutation) -> Solution {
         Solution {
             size: perm.image.len(),
@@ -154,5 +312,45 @@ impl Solution {
             value: value,
             perm: Permutation::from_image(image),
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use permutation::Permutation;
+
+    fn test_vector_equality(va : &Vec<f32>, vb : &Vec<f32>, tol : f32) -> bool {
+        for i in (0..va.len()) {
+            if (va[i] - vb[i]).abs() > tol {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    #[test]
+    fn test_compute_neighbourhood_delta_matrix() {
+        let problem = Problem::random_integral(3);
+
+        problem.print();
+
+        for mu in (1..10) {
+            let perm = Permutation::random(problem.size);
+            println!("perm: {:?}", perm.image);
+            println!("solution: {:?}", problem.value(&perm));
+
+            let transpositions = problem.transposition_neighbourhood(&perm);
+            println!("transpositions: {:?}", transpositions);
+
+            let deltas_very_slow = problem.compute_neighbourhood_delta_matrix_very_slow(&perm);
+            let deltas = problem.compute_neighbourhood_delta_matrix(&perm);
+
+            println!("TEST FAST METHOD:");
+            println!("deltas_very_slow: {:?}", deltas_very_slow);
+            println!("deltas: {:?}", deltas);
+            assert!(test_vector_equality(&deltas_very_slow, &deltas, 1e-9));
+        }
     }
 }

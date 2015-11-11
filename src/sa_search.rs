@@ -1,4 +1,6 @@
-use qap;
+use qap::Problem;
+use qap::Solution;
+use qap::SearchResult;
 use permutation::Permutation;
 use time::SteadyTime;
 use time::Duration;
@@ -28,15 +30,17 @@ pub fn duration_ratio(elapsed : Duration, duration : Duration) -> f32 {
     elapsed_ns as f32 / duration_ns as f32
 }
 
-pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
+pub fn solve(problem : &Problem, duration : Duration) -> SearchResult {
+    let start = SteadyTime::now();
     let size = problem.size;
 
     let init_perm = Permutation::random(size);
     let mut soln = problem.solution(&init_perm);
     let mut best_soln = soln.clone();
 
+    let mut best_soln_time = SteadyTime::now();
+
     let mut num_steps = 0;
-    let start = SteadyTime::now();
     while SteadyTime::now() - start < duration {
         num_steps += 1;
 
@@ -54,11 +58,14 @@ pub fn solve(problem : &qap::Problem, duration : Duration) -> qap::Solution {
 
             if soln.value < best_soln.value {
                 best_soln = soln.clone();
-                println!("sa_search: {}", soln.value);
+                best_soln_time = SteadyTime::now();
+                // println!("sa_search: {}", soln.value);
             }
         }
     }
     println!("sa_search, num_steps: {}", num_steps);
 
-    best_soln
+    let search_duration = SteadyTime::now() - start;
+    let best_soln_duration = best_soln_time - start;
+    SearchResult::new(best_soln, search_duration, best_soln_duration)
 }

@@ -1,5 +1,5 @@
 extern crate rand;
-use self::rand::Rng;
+use rand::Rng;
 // use std::num;
 
 #[derive(Debug, Clone)]
@@ -38,7 +38,7 @@ impl Permutation {
             panic!("indexed_transposition: invalid index {} for size {}", index, size);
         }
 
-        let (i, j) = triangle_index(index);
+        let (i, j) = Permutation::triangle_index(index);
 
         let mut perm = Permutation::identity(size);
 
@@ -62,29 +62,54 @@ impl Permutation {
 
         Permutation::from_image(vec)
     }
-}
 
-pub fn triangle_index(index : usize) -> (usize, usize) {
-    /*
-    n(n-1)/2 options:
-      c
-    r +
-      1 +
-      2 3 +
-      4 5 6 +
-      7 8 9 d +
+    pub fn apply_transposition(mut perm : Permutation, transp : (usize, usize)) -> Permutation {
+        let (j, k) = transp;
 
-      let k = index
-      k ~= r(r+1)/2
-      => r^2 + r - 2*k = 0
-      => r = (-1 +-sqrt(2-4*1*(-2k)))/2
-      => r = floor(-0.5 + sqrt(2+8k)/2)
-    */
+        let tmp = perm.image[j];
+        perm.image[j] = perm.image[k];
+        perm.image[k] = tmp;
 
-    let k = index as f32;
-    let r = (-0.5 + (2.0+8.0*k).sqrt()/2.0).floor() as usize;
-    let c = index - (r*(r+1)) / 2;
-    (r+1, c)
+        perm
+    }
+
+    pub fn triangle_index(index : usize) -> (usize, usize) {
+        /*
+        n(n-1)/2 options:
+          c
+        r +
+          1 +
+          2 3 +
+          4 5 6 +
+          7 8 9 d +
+
+          let k = index
+          k ~= r(r+1)/2
+          => r^2 + r - 2*k = 0
+          => r = (-1 +-sqrt(2-4*1*(-2k)))/2
+          => r = floor(-0.5 + sqrt(2+8k)/2)
+        */
+
+        let k = index as f32;
+        let r = (-0.5 + (2.0+8.0*k).sqrt()/2.0).floor() as usize;
+        let c = index - (r*(r+1)) / 2;
+        (r+1, c)
+    }
+
+    pub fn hamming_distance(perm_a : &Permutation, perm_b : &Permutation) -> usize {
+        if (perm_a.image.len() != perm_b.image.len()) {
+            panic!("perm_a.len() != perm_b.len()")
+        }
+
+        let mut d = 0;
+        for (a, b) in perm_a.image.iter().zip(&perm_b.image) {
+            if *a != *b {
+                d += 1
+            }
+        }
+
+        d
+    }
 }
 
 #[cfg(test)]
@@ -93,10 +118,10 @@ mod tests {
 
     #[test]
     fn test_triangle_index() {
-        println!("{:?}", (0..10).map(triangle_index).collect::<Vec<_>>());
-        assert_eq!(triangle_index(0), (1, 0));
-        assert_eq!(triangle_index(4), (3, 1));
-        assert_eq!(triangle_index(8), (4, 2));
+        println!("{:?}", (0..10).map(Permutation::triangle_index).collect::<Vec<_>>());
+        assert_eq!(Permutation::triangle_index(0), (1, 0));
+        assert_eq!(Permutation::triangle_index(4), (3, 1));
+        assert_eq!(Permutation::triangle_index(8), (4, 2));
     }
 
     #[test]
@@ -140,5 +165,14 @@ mod tests {
         println!("p2: {:?}", p2.image);
         println!("p1: {:?}", p1.image);
         assert!(r1.image == vec!(2, 3, 4, 1, 0));
+    }
+
+    #[test]
+    fn test_apply_transposition() {
+        let p1 = Permutation::from_image(vec!(1, 2, 3, 4, 5));
+        println!("p1: {:?}", p1.image);
+        let r1 = Permutation::apply_transposition(p1, (1, 3));
+        println!("r1: {:?}", r1.image);
+        assert!(r1.image == vec!(1, 4, 3, 2, 5));
     }
 }
