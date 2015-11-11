@@ -1,0 +1,257 @@
+
+\input{latex-setup.tex}
+
+% \title{Optimisation of ball handling behaviour in humanoid robot soccer}
+% \title{\vspace{-2.0cm}Biped walk stability improvement for a small humanoid robot}
+% \subtitle{COMP4120 research presentation}
+% \author{Mitchell Metcalfe}
+
+\title{Comparing metaheuristic approaches to solving the quadratic assignment problem}
+\subtitle{COMP4240 project presentation}
+\author{Mitchell Metcalfe}
+\institute{The University of Newcastle, Australia}
+% \date{\today \\[1.5\baselineskip] Supervised by Dr. Alex Mendes}
+% \date{\today \\[1.5\baselineskip] Supervised by Dr. Alex Mendes}
+
+% Activate to display a given date or no date (if empty), otherwise the current date is printed
+% \date{\today}
+% \date{May 30, 2015}
+
+% \rhead{COMP4120 research presentation, \today}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Outline}
+    \tableofcontents
+\end{frame}
+
+% a) an introduction to the topic studied
+\section{Background and motivation} {
+    \subsection{The quadratic assignment problem (QAP)} {
+        \begin{frame}{The quadratic assignment problem (QAP)}
+            \centering
+
+            Introduced by \citet{Koopmans:1957gf}
+
+            \vspace{1cm}
+
+            `Assignment Problems and the Location of Economic Activities'
+        \end{frame}
+
+        \begin{frame}{The quadratic assignment problem (QAP)}
+            Assign manufacturing plants to locations in a way that maximises total revenue.
+
+            Account for the following complicating factors:
+            \begin{itemize}
+                \item The revenue of each plant is dependent on its location;
+                \item Pairs of plants must transport a given number of commodity bundles between them per unit time;
+                \item Transportation cost is proportional to distance.
+            \end{itemize}
+        \end{frame}
+
+        \begin{frame}{Mathematical formulation}
+            Given the matrices:
+            \begin{itemize}
+                \item \([r_{ki}]\): revenue of plant \(k\) at location \(i\)
+                \item \([a_{kl}]\): required commodity \newterm{flow} between plants \(k\) and \(l\)
+                \item \([b_{ij}]\): cost of transport per unit flow between locations \(i\) and \(j\)
+            \end{itemize}
+
+            Find a permutation \(\pi^{*} \in S_n\) that maximises the total revenue:
+
+            \[ \pi^{*} = \max_{\pi} \left(\sum_{k}{r_{k\pi(k)}} - \sum_{k}\sum_{l}{a_{kl}b_{\pi(k)\pi(l)}}\right) \]
+
+            where  \(\pi(k) = i\) indicates that plant \(k\) is to be placed at location \(i\).
+        \end{frame}
+
+        \begin{frame}{Minimisation problem}
+            Given the matrices:
+            \begin{itemize}
+                \item \([a_{kl}]\): required commodity \newterm{flow} between plants \(k\) and \(l\)
+                \item \([b_{ij}]\): cost of transport per unit flow between locations \(i\) and \(j\)
+            \end{itemize}
+
+            Find a permutation \(\pi^{*} \in S_n\) that minimises the transportation cost:
+
+            \[ \pi^{*} = \min_{\pi} \sum_{k}\sum_{l}{a_{kl}b_{\pi(k)\pi(l)}} \]
+
+            where  \(\pi(k) = i\) indicates that plant \(k\) is to be placed at location \(i\).
+        \end{frame}
+
+        \begin{frame}{Difficulty}
+            \begin{itemize}
+                \item NP-Hard.
+                \item Contains the Travelling Salesman Problem as a special case:
+            \end{itemize}
+
+            \todo{Include the expression of the TSP \citep{Merz:2000vr}}
+
+            \vspace{0.6cm}
+
+            \begin{center}
+                ``one of the most difficult problems in the NP-hard class'' \citep{Loiola:2007jk}
+            \end{center}
+        \end{frame}
+    }
+
+    \subsection{Recent applications} {
+        \begin{frame}{Applications of the QAP}
+            The facilities layout problem (FLP):
+            \begin{itemize}
+                \item Optimally locate manufacturing plants to maximise revenue.
+                \item Used by \citeauthor{Koopmans:1957gf} to motivate the QAP.
+                \item The most common application of the QAP \citep{Loiola:2007jk}.
+            \end{itemize}
+
+            \citet{Loiola:2007jk} surveys 365 papers published between 1957 and 2007.
+        \end{frame}
+
+        \begin{frame}{Recent FLP applications}
+            \begin{description}
+                \item[\citet{Samanta:2015hk}:] Layout optimisation of a bus body manufacturing plant.
+                \item[\citet{XiongfengFeng:2015jo}:] Layout of departments in a hospital.
+                % Decreased the average walking time for outpatients by 11.55\%.
+            \end{description}
+        \end{frame}
+
+        \begin{frame}{Other recent applications}
+            \begin{description}
+                \item[\citet{Alguliyev:2015jw}:] Unsupervised document summarisation.
+                \item[\citet{Azab:2015eq}:] Machine features of a product in an optimal sequence in order to minimise handling time, given a set of precedence constraints between features.
+            \end{description}
+        \end{frame}
+    }
+}
+
+\section{The QAP in the literature} {
+    \begin{frame}{Recent literature}
+        % Include 5 papers:
+        Memory schemas \citet{Meneses:2011hg}
+        \citet{Harris:2015kw}
+        Particle swarm optimisation and Tabu search \citet{Helal:2015de}
+    \end{frame}
+}
+
+\section{Comparison of metaheuristics} {
+    \subsection{Metaheuristics considered} {
+        \begin{frame}{Metaheuristics considered}
+            This work compares four metaheuristics:
+            \begin{itemize}
+                \item Simulated Annealing \citep{kirkpatrick:1983op, vcerny:1985th};
+                \item Iterated tabu search \citep{Misevicius:2012dj};
+                \item BMA \citep{Benlic:2015gp};
+                \item A simple evolutionary algorithm.
+            \end{itemize}
+        \end{frame}
+
+        \begin{frame}{Iterated tabu search (ITS) \citep{Misevicius:2012dj}}
+
+        \end{frame}
+
+        \begin{frame}{BMA \citep{Benlic:2015gp}}
+            \begin{block}{Memetic algorithm \citep{Neri:2012jr}}
+                A metaheuristic combining a population-based approach with a local improvement method.
+            \end{block}
+
+            \vspace{0.8cm}
+
+            BMA has the following features:
+            \begin{description}
+                \item[Local search:] Breakout local search (BLS) \citep{Benlic:2013gi};
+                \item[Crossover:] \scarequotes{The} uniform crossover (UX) operator;
+                \item[Mutation:] Chained sequence mutation.
+            \end{description}
+        \end{frame}
+
+        \begin{frame}{Breakout local search (BLS)}
+            `Breakout local search for the quadratic assignment problem' \citep{Benlic:2013gi}.
+
+            \begin{enumerate}
+                \item Perform steepest descent search using a 2-swap neighbourhood.
+                \item Perform a number of perturbation moves:
+                    \begin{itemize}
+                        \item Either random moves or tabu search moves;
+                        \item Perturbation type chosen based on last improving iteration;
+                        \item Number of moves increases with visits to the same local optimum;
+                    \end{itemize}
+            \end{enumerate}
+        \end{frame}
+
+        \begin{frame}{Evolutionary algorithm}
+
+        \end{frame}
+    }
+
+    \subsection{Method of comparison} {
+        \begin{frame}{Experiment}
+            The performance of the algorithms was compared on the full set of QAPLIB problems \citep{Burkard:1997ve}.
+
+            \begin{itemize}
+                \item Ran each algorithm on all 135 of the 136 problem instances (the trivial instance \texttt{esc16f} was excluded).
+                \item Time limit of \SI{5}{\second} per run.
+                \item Record best solution, time that best solution was found, and actual time taken.
+                \item Test significance of performance difference using a Friedman test.
+            \end{itemize}
+        \end{frame}
+    }
+}
+
+\section{Preliminary results} {
+    \begin{frame}{Experiment results}
+
+    \end{frame}
+
+    \begin{frame}{Significance test}
+
+    \end{frame}
+
+    \begin{frame}{Summary of results}
+
+    \end{frame}
+}
+
+\section{Conclusion} {
+    \begin{frame}{Conclusion}
+        In summary, this work compared four metaheuristics based on recent approaches from the literature to solving the QAP.
+
+        % TODO: Showed that X showed promise for future research.
+        % TODO: The memetic algorithm outperformed the classical approaches.
+        % TODO: Tabu search performed well.
+    \end{frame}
+
+    \begin{frame}{Bibliography}
+      \vspace{-2em}
+      \bibliographystyle{apalike}
+    %   \scriptsize
+      \fontsize{0.5em}{0.5em}\selectfont
+      \bibliography{bibliography}
+    \end{frame}
+
+    \plain{Questions?}
+}
+
+
+% \begin{frame}{NUbots}
+%     \includegraphics[height=0.6\textwidth]{figures/nubots-first-frame.png}
+% \end{frame}
+% \begin{frame}{ZMP Limitations}
+%     \begin{columns}
+%       \column{0.38\linewidth}
+%          \centering
+%          \includegraphics[width=\linewidth]{figures/robot-rotate.pdf}
+%        \column{0.58\linewidth}
+%        \begin{itemize}
+%            \item Gives no useful information if the robot begins to rotate about the edge of a foot
+%            \item Not defined if the point on the ground is not within the support polygon of the robot (as the ground reaction force only acts on the feet)
+%            \begin{itemize}
+%                \item Called the ‘fictitious ZMP’ or the ‘foot rotation indicator' \citep{Goswami:1999hd}
+%                \item Can indicate the severity of unbalance, but not how to restore balance
+%            \end{itemize}
+%        \end{itemize}
+%      \end{columns}
+% \end{frame}
+
+
+\end{document}
