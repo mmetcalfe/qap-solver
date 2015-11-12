@@ -6,7 +6,7 @@ use std::num;
 use std::io::prelude::*;
 use std::io;
 use std::usize;
-use std::f32;
+use std::f64;
 use tabulist::TabuList;
 use permutation::Permutation;
 use qap::Problem;
@@ -30,9 +30,9 @@ pub struct Bma {
     pub mutation_non_improvement_iterations : usize, // ν
     pub initial_jump_magnitude : usize, // L_0
     pub tabu_tenure_range : (usize, usize), // γ
-    pub min_bls_peturb_prob : f32, // Q
+    pub min_bls_peturb_prob : f64, // Q
     pub max_non_improvement_count : usize, // T
-    pub random_vs_recency_prob : f32, // T
+    pub random_vs_recency_prob : f64, // T
 }
 
 impl Bma {
@@ -127,7 +127,7 @@ impl Bma {
                     last_improvement = iteration_number; // TODO: Check if this should be reset.
                 }
 
-                println!("Bma: mutating population, iteration: {}, value: {}", iteration_number, best_solution.value);
+                // println!("Bma: mutating population, iteration: {}, value: {}", iteration_number, best_solution.value);
 
                 // Increase the mutation degree:
                 mutation_degree += self.mu_increment;
@@ -158,7 +158,7 @@ impl Bma {
         SearchResult::new(best_solution, search_duration, best_soln_duration)
     }
 
-    pub fn steepest_descent_search(&self, initial : Solution, delta_matrix : &mut Vec<f32>, tabu_list : &mut TabuList, current_iter : &mut usize) -> Solution {
+    pub fn steepest_descent_search(&self, initial : Solution, delta_matrix : &mut Vec<f64>, tabu_list : &mut TabuList, current_iter : &mut usize) -> Solution {
         // println!("Bma, steepest_descent_search");
 
         let mut rng = rand::thread_rng();
@@ -205,7 +205,7 @@ impl Bma {
         // println!("Bma, breakout_local_search: {}", num_iterations);
 
         let mut rng = rand::thread_rng();
-        // rng.gen::<f32>() <
+        // rng.gen::<f64>() <
         // min_bls_peturb_prob
 
         let mut tabu_list = TabuList::new(self.problem.size);
@@ -265,22 +265,22 @@ impl Bma {
     }
 
     pub fn perturbation(&self, candidate : Solution, jump_magnitude : usize, tabu_list : &mut TabuList,
-                       current_iter : &mut usize, delta_matrix : &mut Vec<f32>,
+                       current_iter : &mut usize, delta_matrix : &mut Vec<f64>,
                        non_improvement_count : &mut usize, best_solution : &mut Solution) -> Solution {
     // println!("Bma, perturbation: jump_magnitude {}", jump_magnitude);
 
        let mut rng = rand::thread_rng();
-       // rng.gen::<f32>() <
+       // rng.gen::<f64>() <
 
        // Determine probability P:
-       let expTerm = (-(*non_improvement_count as f32)/(self.max_non_improvement_count as f32)).exp();
+       let expTerm = (-(*non_improvement_count as f64)/(self.max_non_improvement_count as f64)).exp();
        let prob = if self.min_bls_peturb_prob > expTerm {
            self.min_bls_peturb_prob
        } else {
            expTerm
        };
 
-       let rand_val = rng.gen::<f32>();
+       let rand_val = rng.gen::<f64>();
        if rand_val < prob {
            // Apply directed perturbation:
            return self.perturb_with(
@@ -303,9 +303,9 @@ impl Bma {
     }
 
     fn perturb_with(&self, candidate : Solution, jump_magnitude : usize, tabu_list : &mut TabuList,
-                   current_iter : &mut usize, delta_matrix : &mut Vec<f32>,
+                   current_iter : &mut usize, delta_matrix : &mut Vec<f64>,
                    non_improvement_count : &mut usize, best_solution : &mut Solution,
-                   move_gen_func : &Fn(&Bma, f32, &Vec<f32>, &TabuList, usize) -> usize
+                   move_gen_func : &Fn(&Bma, f64, &Vec<f64>, &TabuList, usize) -> usize
        ) -> Solution {
         let mut rng = rand::thread_rng();
         let mut perturbed = candidate.clone();
@@ -338,14 +338,14 @@ impl Bma {
         perturbed
     }
 
-    pub fn generate_move_random(&self, best_solution_delta : f32, delta_matrix : &Vec<f32>, tabu_list : &TabuList, current_iter : usize) -> usize {
+    pub fn generate_move_random(&self, best_solution_delta : f64, delta_matrix : &Vec<f64>, tabu_list : &TabuList, current_iter : usize) -> usize {
         let mut rng = rand::thread_rng();
         let M = self.problem.size*(self.problem.size-1)/2;
         let m = rng.gen_range(0, M);
         m
     }
 
-    pub fn generate_move_index_tabu_search(&self, best_solution_delta : f32, delta_matrix : &Vec<f32>, tabu_list : &TabuList, current_iter : usize) -> usize {
+    pub fn generate_move_index_tabu_search(&self, best_solution_delta : f64, delta_matrix : &Vec<f64>, tabu_list : &TabuList, current_iter : usize) -> usize {
         let mut rng = rand::thread_rng();
 
         // Start from a random position:
@@ -355,9 +355,9 @@ impl Bma {
 
         // Find the best improving move:
         let mut best_index = 0;
-        let mut best_delta = f32::INFINITY;
+        let mut best_delta = f64::INFINITY;
         let mut best_non_tabu_index = 0;
-        let mut best_non_tabu_delta = f32::INFINITY;
+        let mut best_non_tabu_delta = f64::INFINITY;
         loop {
             // TODO: Use a built-in find method.
             if delta_matrix[m] < best_delta {
@@ -397,7 +397,7 @@ impl Bma {
         let mut rng = rand::thread_rng();
 
         let mut best_index = 0;
-        let mut best_value = f32::INFINITY;
+        let mut best_value = f64::INFINITY;
 
         let sample = rand::sample(&mut rng, 0..population.len(), self.tournament_pool_size);
         for i in sample {
@@ -424,7 +424,7 @@ impl Bma {
         for k in 0..self.problem.size {
             let i = parent_a.perm.image[k] as usize;
             let j = parent_b.perm.image[k] as usize;
-            let p = rng.gen::<f32>() < 0.5;
+            let p = rng.gen::<f64>() < 0.5;
 
             if free_indices.contains(&i) && free_indices.contains(&j) {
                 // If both are free, choose randomly between them:
@@ -450,7 +450,7 @@ impl Bma {
 
     pub fn replacement_strategy(&self, population : &mut Vec<Solution>, new_soln : &Solution) {
         let mut worst_index = 0;
-        let mut worst_value = f32::NEG_INFINITY;
+        let mut worst_value = f64::NEG_INFINITY;
         for i in 0..population.len() {
             let curr_soln = &population[i];
             let dist = Permutation::hamming_distance(&curr_soln.perm, &new_soln.perm);

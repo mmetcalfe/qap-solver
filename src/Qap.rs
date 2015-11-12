@@ -4,7 +4,7 @@ use std::io::prelude::*;
 extern crate rand;
 use rand::Rng;
 use time::Duration;
-use std::f32;
+use std::f64;
 use std::fs::OpenOptions;
 
 use permutation::Permutation;
@@ -12,14 +12,14 @@ use permutation::Permutation;
 #[derive(Debug, Clone)]
 pub struct Problem {
     pub size      : usize,
-    pub distances : Vec<Vec<f32>>,
-    pub weights   : Vec<Vec<f32>>,
+    pub distances : Vec<Vec<f64>>,
+    pub weights   : Vec<Vec<f64>>,
 }
 
 #[derive(Debug, Clone)]
 pub struct Solution {
     pub size  : usize,
-    pub value : f32,
+    pub value : f64,
     pub perm  : Permutation,
 }
 
@@ -27,15 +27,15 @@ pub struct Solution {
 pub struct SearchResult {
     pub solution  : Solution,
     pub best_known_solution : Option<Solution>,
-    pub running_time_seconds : f32,
+    pub running_time_seconds : f64,
     pub instance_name : String,
-    pub time_to_best_solution_seconds : f32,
+    pub time_to_best_solution_seconds : f64,
 }
 
 impl SearchResult {
     pub fn new(best_soln : Solution, search_duration : Duration, best_soln_duration : Duration) -> SearchResult {
-        let total_time_seconds = (search_duration.num_milliseconds() as f32)/1000.0;
-        let best_soln_seconds = (best_soln_duration.num_milliseconds() as f32)/1000.0;
+        let total_time_seconds = (search_duration.num_milliseconds() as f64)/1000.0;
+        let best_soln_seconds = (best_soln_duration.num_milliseconds() as f64)/1000.0;
         SearchResult {
             solution: best_soln,
             running_time_seconds: total_time_seconds,
@@ -53,25 +53,36 @@ impl SearchResult {
                             .open(fname)
                             .unwrap();
 
-        let mut best_known_solution_value = f32::INFINITY;
+        let mut best_known_solution_value = f64::INFINITY;
         if self.best_known_solution.is_some() {
             let sln = self.best_known_solution.clone().unwrap();
             best_known_solution_value = sln.value;
         }
 
+        let deviation = (self.solution.value-best_known_solution_value) / best_known_solution_value;
+        println!("Deviation: {}%", deviation*100.0);
+
         writeln!(file, " - {{ instance_name: {}", self.instance_name);
         writeln!(file, ", soln_value: {}", self.solution.value);
-        writeln!(file, ", running_time_seconds: {}", self.running_time_seconds);
-        writeln!(file, ", time_to_best_solution_seconds: {}", self.time_to_best_solution_seconds);
         writeln!(file, ", best_known_solution_value: {}", best_known_solution_value);
+        writeln!(file, ", time_to_best_solution_seconds: {}", self.time_to_best_solution_seconds);
+        writeln!(file, ", running_time_seconds: {}", self.running_time_seconds);
+        write!(file, ", soln_perm: [");
+        for i in 0..self.solution.perm.image.len() {
+            write!(file, "{}", self.solution.perm.image[i]);
+            if i + 1 < self.solution.perm.image.len() {
+                write!(file, ", ");
+            }
+        }
+        writeln!(file, "]");
         writeln!(file, "}}");
     }
 }
 
 impl Problem {
     pub fn random(size : usize) -> Problem {
-        let mut distances : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
-        let mut weights : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
+        let mut distances : Vec<Vec<f64>> = vec!(vec!(0.0; size); size);
+        let mut weights : Vec<Vec<f64>> = vec!(vec!(0.0; size); size);
         let mut rng = rand::thread_rng();
         for i in 0..size {
             for j in 0..size {
@@ -93,13 +104,13 @@ impl Problem {
     }
 
     pub fn random_integral(size : usize) -> Problem {
-        let mut distances : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
-        let mut weights : Vec<Vec<f32>> = vec!(vec!(0.0; size); size);
+        let mut distances : Vec<Vec<f64>> = vec!(vec!(0.0; size); size);
+        let mut weights : Vec<Vec<f64>> = vec!(vec!(0.0; size); size);
         let mut rng = rand::thread_rng();
         for i in 0..size {
             for j in 0..size {
-                distances[i][j] = rng.gen_range(0 as usize, 2*size) as f32;
-                weights[i][j] = rng.gen_range(0 as usize, 2*size) as f32;
+                distances[i][j] = rng.gen_range(0 as usize, 2*size) as f64;
+                weights[i][j] = rng.gen_range(0 as usize, 2*size) as f64;
             }
         }
 
@@ -132,7 +143,7 @@ impl Problem {
 
         let values : Vec<_> = input.trim()
             .split(|c| " \n".contains(c))
-            .map(|s| s.parse::<f32>())
+            .map(|s| s.parse::<f64>())
             .filter_map(Result::ok)
             .collect();
 
@@ -140,22 +151,25 @@ impl Problem {
 
         let arrays : Vec<_> = values[1..].chunks(size).map(|c| c.to_vec()).collect();
 
-        // let result = "123".parse::<f32>().unwrap();
+        // let result = "123".parse::<f64>().unwrap();
         // println!("size: {}, len: {} (should be {})", size, arrays.len(), size*2);
 
         Problem {
             size: size,
-            distances: arrays[0..size].to_vec(),
-            weights: arrays[size..size*2].to_vec(),
+            // distances: arrays[0..size].to_vec(),
+            // weights: arrays[size..size*2].to_vec(),
+
+            weights: arrays[0..size].to_vec(),
+            distances: arrays[size..size*2].to_vec(),
         }
     }
 
     pub fn print(&self) {
 
-        let print_vec = |ref vec: &Vec<Vec<f32>>| {
+        let print_vec = |ref vec: &Vec<Vec<f64>>| {
             for r in vec.iter() {
                 for v in r.iter() {
-                    print!("{:4.1} ", v);
+                    print!("{:8.1} ", v);
                 }
                 println!("");
             }
@@ -170,16 +184,17 @@ impl Problem {
         println!("}}");
     }
 
-    pub fn value(&self, perm : &Permutation) -> f32 {
+    pub fn value(&self, perm : &Permutation) -> f64 {
         // TODO: Profile this method, and make it fast.
 
-        let mut sol : f32 = 0.0;
+        let mut sol : f64 = 0.0;
         for i in 0..self.size {
             for j in 0..self.size {
                 let pi = perm.image[i] as usize;
                 let pj = perm.image[j] as usize;
 
-                sol += self.distances[i][j] * self.weights[pi][pj];
+                sol += self.weights[i][j] * self.distances[pi][pj];
+                // sol += self.distances[i][j] * self.weights[pi][pj];
             }
         }
 
@@ -198,7 +213,7 @@ impl Problem {
         sol
     }
 
-    pub fn solution_value_difference(&self, perm : &Permutation, transp : (usize, usize)) -> f32 {
+    pub fn solution_value_difference(&self, perm : &Permutation, transp : (usize, usize)) -> f64 {
         let (i, j) = transp;
 
         let a = &self.distances;
@@ -223,7 +238,7 @@ impl Problem {
         diff
     }
 
-    pub fn compute_neighbourhood_delta_matrix_very_slow(&self, perm : &Permutation) -> Vec<f32> {
+    pub fn compute_neighbourhood_delta_matrix_very_slow(&self, perm : &Permutation) -> Vec<f64> {
         let M = self.size*(self.size-1)/2;
         let mut delta_matrix = Vec::with_capacity(self.size);
 
@@ -240,7 +255,7 @@ impl Problem {
         delta_matrix
     }
 
-    pub fn compute_neighbourhood_delta_matrix(&self, perm : &Permutation) -> Vec<f32> {
+    pub fn compute_neighbourhood_delta_matrix(&self, perm : &Permutation) -> Vec<f64> {
         let M = self.size*(self.size-1)/2;
         let mut delta_matrix = Vec::with_capacity(self.size);
         for m in 0..M {
@@ -284,6 +299,7 @@ impl Solution {
 
         let value_strings : Vec<_> = input.trim()
             .split(|c| ", \n".contains(c))
+            .map(|s| s.trim())
             .filter(|s| s.len() != 0)
             .collect();
 
@@ -293,7 +309,7 @@ impl Solution {
             Ok(val)  => val,
             Err(why) => panic!("Couldn't parse size {}: {}", value_strings[0], Error::description(&why)),
         };
-        let value = match value_strings[1].parse::<f32>() {
+        let value = match value_strings[1].parse::<f64>() {
             Ok(val)  => val,
             Err(why) => panic!("Couldn't parse value {}: {}", value_strings[1], Error::description(&why)),
         };
@@ -306,6 +322,8 @@ impl Solution {
         if !image.contains(&0) {
             image = image.iter().map(|v| v - 1).collect();
         }
+
+        // println!("{:?}", value);
 
         Some(Solution {
             size: size,
@@ -320,7 +338,7 @@ mod tests {
     use super::*;
     use permutation::Permutation;
 
-    fn test_vector_equality(va : &Vec<f32>, vb : &Vec<f32>, tol : f32) -> bool {
+    fn test_vector_equality(va : &Vec<f64>, vb : &Vec<f64>, tol : f64) -> bool {
         for i in (0..va.len()) {
             if (va[i] - vb[i]).abs() > tol {
                 return false;

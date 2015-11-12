@@ -75,7 +75,7 @@ pub fn crossover(problem : &Problem, parent_a : &Solution, parent_b : &Solution)
     for k in 0..problem.size {
         let i = parent_a.perm.image[k] as usize;
         let j = parent_b.perm.image[k] as usize;
-        let p = rng.gen::<f32>() < 0.5;
+        let p = rng.gen::<f64>() < 0.5;
 
         if free_indices.contains(&i) && free_indices.contains(&j) {
             // If both are free, choose randomly between them:
@@ -141,7 +141,7 @@ pub fn solve(problem : &Problem, duration : Duration) -> SearchResult {
             // Breed new individuals through crossover and mutation:
             // Evaluate fitnesses:
             while new_pop.len() < worst_count {
-                let unif = rng.gen::<f32>();
+                let unif = rng.gen::<f64>();
                 if unif < crossover_prob {
                     // crossover:
                     let parent_i = rng.choose(best_pop).unwrap();

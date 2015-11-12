@@ -90,7 +90,7 @@ impl Permutation {
           => r = floor(-0.5 + sqrt(2+8k)/2)
         */
 
-        let k = index as f32;
+        let k = index as f64;
         let r = (-0.5 + (2.0+8.0*k).sqrt()/2.0).floor() as usize;
         let c = index - (r*(r+1)) / 2;
         (r+1, c)

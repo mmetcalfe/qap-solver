@@ -2,7 +2,7 @@ extern crate rand;
 use self::rand::Rng;
 use std::cmp;
 use std::num;
-use std::f32;
+use std::f64;
 use tabulist::TabuList;
 use permutation::Permutation;
 use qap::Problem;
@@ -59,7 +59,7 @@ pub struct IteratedTabuSearch {
     pub search_intensity : usize, // W
     pub mutation_rate_range : (usize, usize), // [μ_min, μ_max]
     pub tabu_tenure_range : (usize, usize), // [h_low, h_high]
-    pub randomisation_level : f32, // α
+    pub randomisation_level : f64, // α
     pub intra_intensification_interval : usize, // I1
     pub inter_intensification_interval : usize, // I2
     pub num_mutation_trials : usize, // η
@@ -76,12 +76,12 @@ impl IteratedTabuSearch {
             problem: problem,
             search_extensity: if lifelike {5*size} else {25*size},
             search_intensity: if lifelike {size*size} else {size},
-            mutation_rate_range: (3*size/10, 5*size/10),
-            tabu_tenure_range: if size > 50 {(2*size/10, 4*size/10)} else {(1*size/10, 2*size/10)},
+            mutation_rate_range: ((3*size)/10, (5*size)/10),
+            tabu_tenure_range: if size > 50 {((2*size)/10, (4*size)/10)} else {((1*size)/10, (2*size)/10)},
             randomisation_level: 0.05,
             intra_intensification_interval: 2*size,
-            inter_intensification_interval: 5*size/10,
-            num_mutation_trials: 3*size/10,
+            inter_intensification_interval: (5*size)/10,
+            num_mutation_trials: (3*size)/10,
             disruptiveness_control: 10,
             // tabu_list: TabuList::new(size),
         }
@@ -95,8 +95,9 @@ impl IteratedTabuSearch {
     pub fn search(&self, duration : Duration) -> SearchResult {
         let start = SteadyTime::now();
 
-        let initial = Permutation::random(self.problem.size);
-        let mut best_solution = self.problem.solution(&initial);
+        let initial_perm = Permutation::random(self.problem.size);
+        let initial = self.problem.solution(&initial_perm);
+        let mut best_solution = initial.clone();
 
         let mut best_soln_time = SteadyTime::now();
 
@@ -116,13 +117,14 @@ impl IteratedTabuSearch {
                 mu = self.mutation_rate_range.0;
             }
 
-            let mutant = self.controlled_chained_mutation(&candidate, mu);
-            candidate = self.improved_robust_tabu_search(mutant, self.search_intensity);
+            let mutant = self.controlled_chained_mutation(&candidate.perm, mu);
+            let mutant_solution = self.problem.solution(&mutant);
+            candidate = self.improved_robust_tabu_search(mutant_solution, self.search_intensity);
 
-            let candidate_solution = self.problem.solution(&candidate);
-            if candidate_solution.value < best_solution.value {
+            // let candidate_solution = self.problem.solution(&candidate);
+            if candidate.value < best_solution.value {
                 // Save the best solution so far:
-                best_solution = candidate_solution;
+                best_solution = candidate.clone();
                 best_soln_time = SteadyTime::now();
 
                 // Reset the mutation rate:
@@ -140,16 +142,17 @@ impl IteratedTabuSearch {
         SearchResult::new(best_solution, search_duration, best_soln_duration)
     }
 
-    pub fn improved_robust_tabu_search(&self, initial : Permutation, search_intensity : usize) -> Permutation {
+    pub fn improved_robust_tabu_search(&self, initial : Solution, search_intensity : usize) -> Solution {
+        // println!("IteratedTabuSearch: improved_robust_tabu_search");
         let mut rng = rand::thread_rng();
 
         // Initialise the tabu list:
         let mut tabu_list = TabuList::new(self.problem.size);
         let decoder = Decoder::new(self.problem.size);
 
-        let mut best_solution = self.problem.solution(&initial);
+        let mut best_solution = initial.clone(); //self.problem.solution(&initial);
         let mut candidate = initial;
-        let mut candidate_solution = self.problem.solution(&candidate);
+        // let mut candidate_solution = self.problem.solution(&candidate);
 
         // Calculate differences:
         // let d = |ref perm, uv| self.solution_value_difference(&perm, decoder.decode(uv));
@@ -159,20 +162,20 @@ impl IteratedTabuSearch {
         let M = n*(n-1)/2; // Number of objective function differences.
         tabu_list.tabu_tenure = self.tabu_tenure_range.0;
         let mut wp = 0;
-        let mut m_old = 0; // Old objctive function difference.
+        let mut m_old = 0;
         let threshold = 3*n;
 
         let mut mp = 0;
 
         for w in (0..search_intensity) {
-            let mut d_min = f32::INFINITY;
+            let mut d_min = f64::INFINITY;
             // Find best neighbouring permutation:
             for m in (0..M) {
                 // let candidate_diff = d(&candidate, m);
-                let candidate_diff = self.problem.solution_value_difference(&candidate, decoder.decode(m));
+                let candidate_diff = self.problem.solution_value_difference(&candidate.perm, decoder.decode(m));
                 if w % self.intra_intensification_interval != 0 {
-                    let tabu_criterion = !tabu_list.is_tabu(decoder.decode(m), w) && rng.gen::<f32>() >= self.randomisation_level;
-                    let aspiration_criterion = candidate_solution.value + candidate_diff < best_solution.value && tabu_criterion;
+                    let tabu_criterion = tabu_list.is_tabu(decoder.decode(m), w) && rng.gen::<f64>() >= self.randomisation_level;
+                    let aspiration_criterion = candidate.value + candidate_diff < best_solution.value && tabu_criterion;
                     if (candidate_diff < d_min && !tabu_criterion) || aspiration_criterion {
                         d_min = candidate_diff;
                         mp = m;
@@ -183,32 +186,37 @@ impl IteratedTabuSearch {
                 }
             }
 
-            if d_min < f32::INFINITY {
+            if d_min < f64::INFINITY {
                 let uv = decoder.decode(mp);
 
                 // TODO: Update differences.
 
                 // Replace current solution with the new one:
-                candidate = Permutation::apply_transposition(candidate, uv);
-                candidate_solution = self.problem.solution(&candidate); // TODO: Use the difference instead.
+                candidate.perm = Permutation::apply_transposition(candidate.perm, uv);
+                candidate.value += d_min;
 
                 // Add the move uv to the tabu list:
                 let h = tabu_list.tabu_tenure;
                 tabu_list.make_tabu(uv, w + h);
                 tabu_list.tabu_tenure = cmp::max(self.tabu_tenure_range.0, (tabu_list.tabu_tenure % self.tabu_tenure_range.1) + 1);
 
-
                 if d_min < 0.0 && w - wp > self.inter_intensification_interval {
+                    // println!("IteratedTabuSearch: uv:{:?}, dmin:{}, w:{}, wp:{}, int:{}", uv, d_min, w, wp, self.inter_intensification_interval);
                     candidate = self.fast_steepest_descent(candidate, &decoder, &mut tabu_list, w);
                     wp = w;
                 }
+                //  else {
+                //     println!("IteratedTabuSearch: uv:{:?}", uv);
+                // }
 
                 m_old = mp;
 
                 // Save the best solution:
-                if candidate_solution.value < best_solution.value {
+                // candidate_solution = self.problem.solution(&candidate); // TODO: Use the difference instead.
+                if candidate.value < best_solution.value {
                     // best_solution = candidate_solution.clone(); // TODO: Remove clone.
-                    best_solution = self.problem.solution(&candidate); // TODO: Remove clone.
+                    // best_solution = self.problem.solution(&candidate); // TODO: Remove clone.
+                    best_solution = candidate.clone(); //self.problem.solution(&candidate); // TODO: Remove clone.
 
                     // Correct the tabu list:
                     if w > threshold {
@@ -219,10 +227,13 @@ impl IteratedTabuSearch {
             }
         }
 
-        best_solution.perm
+        // best_solution.perm
+        best_solution
     }
 
-    pub fn fast_steepest_descent(&self, initial : Permutation, decoder : &Decoder, tabu_list : &mut TabuList, iteration : usize) -> Permutation {
+    pub fn fast_steepest_descent(&self, initial : Solution, decoder : &Decoder, tabu_list : &mut TabuList, iteration : usize) -> Solution {
+        // println!("IteratedTabuSearch: fast_steepest_descent");
+
         let M = self.problem.size*(self.problem.size-1)/2; // Number of objective function differences.
 
         let mut candidate = initial;
@@ -232,7 +243,7 @@ impl IteratedTabuSearch {
             let mut mp = 0;
 
             for m in (0..M) {
-                let candidate_diff = self.problem.solution_value_difference(&candidate, decoder.decode(m));
+                let candidate_diff = self.problem.solution_value_difference(&candidate.perm, decoder.decode(m));
                 if candidate_diff < d_min {
                     d_min = candidate_diff;
                     mp = m;
@@ -242,7 +253,8 @@ impl IteratedTabuSearch {
             if d_min < 0.0 {
                 // TODO: Update differences.
                 let uv = decoder.decode(mp);
-                candidate = Permutation::apply_transposition(candidate, uv);
+                candidate.perm = Permutation::apply_transposition(candidate.perm, uv);
+                candidate.value += d_min;
                 let h = tabu_list.tabu_tenure;
                 tabu_list.make_tabu(uv, iteration + h);
                 tabu_list.tabu_tenure = cmp::max(self.tabu_tenure_range.0, (h % self.tabu_tenure_range.1) + 1);
@@ -317,8 +329,9 @@ impl IteratedTabuSearch {
     }
 
     pub fn controlled_chained_mutation(&self, perm : &Permutation, mu : usize) -> Permutation {
+        // println!("IteratedTabuSearch: controlled_chained_mutation");
         let mut best_mutant = perm.clone();
-        let mut best_value = self.problem.value(&best_mutant);
+        let mut best_value = f64::INFINITY;
         for l in (0..self.num_mutation_trials) {
             // Generate a disruptive random sequence:
             let seq = IteratedTabuSearch::disruptive_sequence(self.problem.size, mu, self.disruptiveness_control);
