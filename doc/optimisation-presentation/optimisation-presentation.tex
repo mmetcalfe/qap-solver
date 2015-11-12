@@ -83,10 +83,10 @@
         \begin{frame}{Difficulty}
             \begin{itemize}
                 \item NP-Hard.
-                \item Contains the Travelling Salesman Problem as a special case:
+                \item Contains the Travelling Salesman Problem as a special case.
             \end{itemize}
 
-            \todo{Include the expression of the TSP \citep{Merz:2000vr}}
+            % \todo{Include the expression of the TSP \citep{Merz:2000vr}}
 
             \vspace{0.6cm}
 
@@ -126,11 +126,46 @@
 }
 
 \section{The QAP in the literature} {
+
+    \begin{frame}{Memetic algorithms}
+        \begin{block}{Memetic algorithm \citep{Neri:2012jr}}
+            A metaheuristic combining a population-based approach with a local improvement method.
+        \end{block}
+    \end{frame}
+    %
+    % \begin{frame}{Recent literature}
+    %     \begin{description}
+    %         \item[\citep{Meneses:2011hg}:]
+    %     \end{description}
+    % \end{frame}
+
     \begin{frame}{Recent literature}
-        % Include 5 papers:
-        Memory schemas \citet{Meneses:2011hg}
-        \citet{Harris:2015kw}
-        Particle swarm optimisation and Tabu search \citet{Helal:2015de}
+        \begin{description}
+            \item[\citep{Misevicius:2012dj}:] Iterated tabu-search (ITS) - alternates \newterm{controlled chained mutations} with a variant of tabu-search. Includes several rules to deter \scarequotes{stagnant behaviour}.
+            \item[\citep{Harris:2015kw}:] A memetic algorithm. Employs a ternary tree to structure the population. No mutation operator. Uses tabu-search and uniform crossover.
+            \item[\citep{Benlic:2015gp}:] BMA - Breakout local search (BLS) with uniform crossover and chained mutation;
+            \item[\citep{Helal:2015de}:] TBH-PSO - Hierarchical Particle Swarm Optimisation (HPSO) with Tabu Local Search;
+        \end{description}
+    \end{frame}
+
+    \begin{frame}{Recent literature}
+        \begin{block}{QAPLIB \citep{Burkard:1997ve}}
+            A widely used library of QAP instances intended as test instances for the research community.
+        \end{block}
+
+        \vspace{0.8cm}
+
+        QAPLIB results in the literature:
+        \begin{tabularx}{1.0\textwidth}{@{}l|rrX@{}}
+            \toprule
+            Publication & Gap (\%) & Time Limit & Time (s) \\
+            \midrule
+            \citep{Misevicius:2012dj} & 0.5 & \SI{5}{\minute} &  \\
+            \citep{Harris:2015kw} & 0.049 & \SI{5}{\minute} & 3.93 \\
+            \citep{Benlic:2015gp} & 0.016 & \SI{30}{\minute} & 150 \\
+            \citep{Helal:2015de} & 0.0919 & & 44 \\
+            \bottomrule
+        \end{tabularx}
     \end{frame}
 }
 
@@ -147,16 +182,25 @@
         \end{frame}
 
         \begin{frame}{Iterated tabu search (ITS) \citep{Misevicius:2012dj}}
-
+            Alternates two steps:
+            \begin{enumerate}
+                \item \newterm{Controlled chained mutation}
+                    \begin{itemize}
+                        \item Performs a \newterm{chained mutation}
+                        \item Chooses the most \newterm{disruptive} mutation from a set
+                        \item Controls mutation size and disruptiveness
+                    \end{itemize}
+                \item \newterm{Improved robust tabu-search}
+                    Tabu search with extra rules to deter \scarequotes{stagnant behaviour}:
+                    \begin{itemize}
+                        \item periodically performs steepest descent search
+                        \item periodically ignores the tabu-list
+                        \item halves all tabu-counts when a new local optimum is reached
+                    \end{itemize}
+            \end{enumerate}
         \end{frame}
 
         \begin{frame}{BMA \citep{Benlic:2015gp}}
-            \begin{block}{Memetic algorithm \citep{Neri:2012jr}}
-                A metaheuristic combining a population-based approach with a local improvement method.
-            \end{block}
-
-            \vspace{0.8cm}
-
             BMA has the following features:
             \begin{description}
                 \item[Local search:] Breakout local search (BLS) \citep{Benlic:2013gi};
@@ -168,6 +212,7 @@
         \begin{frame}{Breakout local search (BLS)}
             `Breakout local search for the quadratic assignment problem' \citep{Benlic:2013gi}.
 
+            Each iteration:
             \begin{enumerate}
                 \item Perform steepest descent search using a 2-swap neighbourhood.
                 \item Perform a number of perturbation moves:
@@ -180,7 +225,19 @@
         \end{frame}
 
         \begin{frame}{Evolutionary algorithm}
-
+            An evolutionary algorithm without a local improvement method:
+            \begin{itemize}
+                \item Maintains a population of \(N\) solutions;
+                \item Each iteration:
+                \begin{enumerate}
+                    \item Remove all but the \(K\) best solutions from the population.
+                    \item Generate \(N-K\) new individuals using either crossover or mutation, chosen randomly:
+                        \begin{itemize}
+                            \item Chained sequence mutation
+                            \item Uniform crossover
+                        \end{itemize}
+                \end{enumerate}
+            \end{itemize}
         \end{frame}
     }
 
@@ -192,29 +249,69 @@
                 \item Ran each algorithm on all 135 of the 136 problem instances (the trivial instance \texttt{esc16f} was excluded).
                 \item Time limit of \SI{5}{\second} per run.
                 \item Record best solution, time that best solution was found, and actual time taken.
-                \item Test significance of performance difference using a Friedman test.
+                \item Test significance of performance difference using Wilcoxon signed rank tests.
             \end{itemize}
         \end{frame}
     }
 }
 
 \section{Preliminary results} {
+    \begin{frame}{Implementation details}
+        \begin{itemize}
+            \item The algorithms were written in Rust and compiled with rustc 1.3.0 and cargo 0.5.0
+            \item Experiments were run on an early 2013 Macbook Pro 15'' with a \SI{2.7}{\giga\hertz} Intel Core i7 processor and \SI{16}{\giga\byte} of RAM
+            \item The neighbourhood evaluation acceleration due to \citet{Frieze:1989iv} was not used for ITS and BMA
+        \end{itemize}
+    \end{frame}
+
     \begin{frame}{Experiment results}
 
+        Experiment results averaged over all QAPLIB problems:
+
+        \begin{tabularx}{1.0\textwidth}{@{}l|rrr@{}}
+            \toprule
+            Algorithm & Deviation (\%) & BKV Time (s) & \% BKV Solutions \\
+            \midrule
+            SA  &  7.40 & 2.70 & 22.22 \\
+            ITS &  6.88 & 0.29 & 18.52 \\
+            BMA &  0.63 & 0.52 & 67.41 \\
+            EA  & 10.54 & 0.60 &  9.63 \\
+            \bottomrule
+        \end{tabularx}
+
     \end{frame}
 
-    \begin{frame}{Significance test}
+    \begin{frame}{Significance tests}
+        Wilcoxon signed rank tests on the \% deviation from the BKV:
 
+        \begin{tabularx}{1.0\textwidth}{@{}ll|r@{}}
+            \toprule
+            \multicolumn{2}{c}{Algorithms} & p-value \\
+            \midrule
+            BMA & ITS & <0.0001 \\
+            BMA & EA  & <0.0001 \\
+            BMA & SA  & <0.0001 \\
+            ITS & EA  & <0.0001 \\
+            ITS & SA  & 0.9333 \\
+            EA  & SA  & >0.9999 \\
+            \bottomrule
+        \end{tabularx}
     \end{frame}
 
-    \begin{frame}{Summary of results}
-
-    \end{frame}
+    % \begin{frame}{Summary of results}
+    %
+    % \end{frame}
 }
 
 \section{Conclusion} {
     \begin{frame}{Conclusion}
-        In summary, this work compared four metaheuristics based on recent approaches from the literature to solving the QAP.
+        This work compared four metaheuristics based on recent approaches from the literature to solving the QAP.
+
+        \begin{itemize}
+            \item BMA significantly outperformed the other algorithms
+            \item The evolutionary method without a tabu-list or local-improvement method was ineffective
+            \item Simulated annealing performed surprisingly well / ITS may be have implemented incorrectly
+        \end{itemize}
 
         % TODO: Showed that X showed promise for future research.
         % TODO: The memetic algorithm outperformed the classical approaches.
