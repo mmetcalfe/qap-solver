@@ -33,7 +33,7 @@ fn make_symmetric(mat : &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
 }
 
 fn main() {
-    for path in glob::glob("data/qapdata/*.dat").unwrap().filter_map(Result::ok) {
+    for path in glob::glob("data/qapdata/tai*.dat").unwrap().filter_map(Result::ok) {
     // for path in glob::glob("data/qapdata/*.dat").unwrap().filter_map(Result::ok) {
         // println!("{}", path.display());
 
@@ -107,10 +107,10 @@ fn main() {
         // its_search_result.append_to_file("results_its.yaml");
         // println!("its_search_result: {:?}", its_search_result);
 
-        // let mut bma_search_result = bma::Bma::solve(&problem, duration);
-        // bma_search_result.instance_name = String::from(sln_name);
-        // bma_search_result.best_known_solution = solution.clone();
-        // bma_search_result.append_to_file("results_bma.yaml");
-        // println!("bma_search_result: {:?}", bma_search_result);
+        let mut bma_search_result = bma::Bma::solve(&problem, duration);
+        bma_search_result.instance_name = String::from(sln_name);
+        bma_search_result.best_known_solution = solution.clone();
+        bma_search_result.append_to_file("results_bma.yaml");
+        println!("bma_search_result: {:?}", bma_search_result);
     }
 }

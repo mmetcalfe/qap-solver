@@ -193,8 +193,8 @@ impl Problem {
                 let pi = perm.image[i] as usize;
                 let pj = perm.image[j] as usize;
 
-                sol += self.weights[i][j] * self.distances[pi][pj];
-                // sol += self.distances[i][j] * self.weights[pi][pj];
+                // sol += self.weights[i][j] * self.distances[pi][pj];
+                sol += self.distances[i][j] * self.weights[pi][pj];
             }
         }
 
