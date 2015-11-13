@@ -1,0 +1,60 @@
+\subsection{Implementation details} {
+    \begin{itemize}
+        \item The algorithms were written in Rust and compiled with rustc 1.3.0 and cargo 0.5.0
+        \item Experiments were run on an early 2013 Macbook Pro 15'' with a \SI{2.7}{\giga\hertz} Intel Core i7 processor and \SI{16}{\giga\byte} of RAM
+        \item The neighbourhood evaluation acceleration due to \citet{Frieze:1989iv} was not used for ITS and BMA
+    \end{itemize}
+}
+
+\subsection{Experiment results} {
+
+    Experiment results averaged over all QAPLIB problems:
+
+    \begin{tabularx}{1.0\textwidth}{@{}l|rrr@{}}
+        \toprule
+        Algorithm & Deviation (\%) & BKV Time (s) & \% BKV Solutions \\
+        \midrule
+        SA  &  7.40 & 2.70 & 22.22 \\
+        ITS &  6.88 & 0.29 & 18.52 \\
+        BMA &  0.63 & 0.52 & 67.41 \\
+        EA  & 10.54 & 0.60 &  9.63 \\
+        \bottomrule
+    \end{tabularx}
+
+}
+
+\subsection{Significance tests} {
+    Wilcoxon signed rank tests on the \% deviation from the BKV:
+
+    \begin{table}
+        \centering
+        \caption{A summary of the 12 experimental trials}
+        \label{tab:training_schemes}
+        \begin{tabularx}{1.0\textwidth}{@{}ll|r@{}}
+            \toprule
+            \multicolumn{2}{c}{Algorithms} & p-value \\
+            \midrule
+            BMA & ITS & \(<0.0001\) \\
+            BMA & EA  & \(<0.0001\) \\
+            BMA & SA  & \(<0.0001\) \\
+            ITS & EA  & \(<0.0001\) \\
+            ITS & SA  & \(0.9333\) \\
+            EA  & SA  & \(>0.9999\) \\
+            \bottomrule
+        \end{tabularx}
+    \end{table}
+}
+
+\subsection{Discussion} {
+    This work compared four metaheuristics based on recent approaches from the literature to solving the QAP.
+
+    \begin{itemize}
+        \item BMA significantly outperformed the other algorithms
+        \item The evolutionary method without a tabu-list or local-improvement method was ineffective
+        \item Simulated annealing performed surprisingly well / ITS may be have implemented incorrectly
+    \end{itemize}
+
+    % TODO: Showed that X showed promise for future research.
+    % TODO: The memetic algorithm outperformed the classical approaches.
+    % TODO: Tabu search performed well.
+}

@@ -1,0 +1,83 @@
+\subsection{Metaheuristics considered} {
+    \subsubsection{Metaheuristics considered} {
+        This work compares four metaheuristics:
+        \begin{itemize}
+            \item Simulated Annealing \citep{kirkpatrick:1983op, vcerny:1985th};
+            \item Iterated tabu search \citep{Misevicius:2012dj};
+            \item BMA \citep{Benlic:2015gp};
+            \item A simple evolutionary algorithm.
+        \end{itemize}
+    }
+
+    \subsubsection{Iterated tabu search (ITS) \citep{Misevicius:2012dj}} {
+        Alternates two steps:
+        \begin{enumerate}
+            \item \newterm{Controlled chained mutation}
+                \begin{itemize}
+                    \item Performs a \newterm{chained mutation}
+                    \item Chooses the most \newterm{disruptive} mutation from a set
+                    \item Controls mutation size and disruptiveness
+                \end{itemize}
+            \item \newterm{Improved robust tabu-search}
+                Tabu search with extra rules to deter \scarequotes{stagnant behaviour}:
+                \begin{itemize}
+                    \item periodically performs steepest descent search
+                    \item periodically ignores the tabu-list
+                    \item halves all tabu-counts when a new local optimum is reached
+                \end{itemize}
+        \end{enumerate}
+    }
+
+    \subsubsection{BMA \citep{Benlic:2015gp}} {
+        BMA has the following features:
+        \begin{description}
+            \item[Local search:] Breakout local search (BLS) \citep{Benlic:2013gi};
+            \item[Crossover:] \scarequotes{The} uniform crossover (UX) operator;
+            \item[Mutation:] Chained sequence mutation.
+        \end{description}
+    }
+
+    \subsubsection{Breakout local search (BLS)} {
+        `Breakout local search for the quadratic assignment problem' \citep{Benlic:2013gi}.
+
+        Each iteration:
+        \begin{enumerate}
+            \item Perform steepest descent search using a 2-swap neighbourhood.
+            \item Perform a number of perturbation moves:
+                \begin{itemize}
+                    \item Either random moves or tabu search moves;
+                    \item Perturbation type chosen based on last improving iteration;
+                    \item Number of moves increases with visits to the same local optimum;
+                \end{itemize}
+        \end{enumerate}
+    }
+
+    \subsubsection{Evolutionary algorithm} {
+        An evolutionary algorithm without a local improvement method:
+        \begin{itemize}
+            \item Maintains a population of \(N\) solutions;
+            \item Each iteration:
+            \begin{enumerate}
+                \item Remove all but the \(K\) best solutions from the population.
+                \item Generate \(N-K\) new individuals using either crossover or mutation, chosen randomly:
+                    \begin{itemize}
+                        \item Chained sequence mutation
+                        \item Uniform crossover
+                    \end{itemize}
+            \end{enumerate}
+        \end{itemize}
+    }
+}
+
+\subsection{Method of comparison} {
+    \subsubsection{Experiment} {
+        The performance of the algorithms was compared on the full set of QAPLIB problems \citep{Burkard:1997ve}.
+
+        \begin{itemize}
+            \item Ran each algorithm on all 135 of the 136 problem instances (the trivial instance \texttt{esc16f} was excluded).
+            \item Time limit of \SI{5}{\second} per run.
+            \item Record best solution, time that best solution was found, and actual time taken.
+            \item Test significance of performance difference using Wilcoxon signed rank tests.
+        \end{itemize}
+    }
+}
