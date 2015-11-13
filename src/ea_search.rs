@@ -105,11 +105,11 @@ pub fn solve(problem : &Problem, duration : Duration) -> SearchResult {
 
     let size = problem.size;
 
-    let pop_size = 20;
-    let champion_count = 2;
+    let pop_size = 40;
+    let champion_count = 10;
     let worst_count = pop_size - champion_count;
-    let crossover_prob = 0.5; // crossover vs mutation
-    let mutation_degree = problem.size/3; // crossover vs mutation
+    let crossover_prob = 0.25; // crossover vs mutation
+    let mutation_degree = problem.size/3;
 
     // Generate initial population:
     // Evaluate fitnesses:

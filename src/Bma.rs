@@ -44,7 +44,7 @@ impl Bma {
             problem: problem,
             pop_size: pop_size,
             num_bls_iterations_short: cmp::max(1, (256*1)/size), // 50, // 5000
-            num_bls_iterations_long: cmp::max(1, (256*2)/size), // 100, // 10000
+            num_bls_iterations_long:  cmp::max(1, (256*2)/size), // 100, // 10000
             mu_min: size / 2,
             mu_increment: cmp::max(1, size/10),
             tournament_pool_size: 4,
