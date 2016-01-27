@@ -1,1 +1,10 @@
 This work compared four metaheuristics based on recent approaches from the literature to solving the QAP.
+These methods included a memetic algorithm, BMA, a non-population based iterated search method, iterated tabu search (ITS), simulated annealing (SA), and a simple evolutionary algorithm without a local search method (EA).
+The four methods were implemented by the author and compared in an experiment using the full set of QAPLIB problem instances.
+The results of the experiment indicated that the BMA implementation significantly outperformed the other algorithms.
+The simple evolutionary algorithm without a tabu-list or local-improvement method was found to be the least effective.
+The simulated annealing implementation performed surprisingly well, achieving a mean deviation from the best known solution similar to the ITS implementation.
+Given the status of ITS in recent literature as a formidable approach to solving the QAP, it is suspected that the implementation may be incorrect.
+Alternatively, the additional optimisations to the neighbourhood solution evaluation procedure that were omitted from the implementation created for this work may be essential for the algorithm to perform effectively.
+
+The comparatively good results achieved by the BMA algorithm indicate that it may be a promising focus for future work.

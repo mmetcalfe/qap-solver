@@ -83,11 +83,6 @@ bkv_rate_ea  <- sum(results_ea $soln_value <= results_ea $best_known_solution_va
 bkv_rate_its <- sum(results_its$soln_value <= results_its$best_known_solution_value)/length(results_its$best_known_solution_value)
 bkv_rate_sa  <- sum(results_sa $soln_value <= results_sa $best_known_solution_value)/length(results_sa $best_known_solution_value)
 
-bkv_time_bma <- mean(results_bma[results_bma$soln_value <= results_bma$best_known_solution_value,]$time_to_best_solution_seconds)
-bkv_time_ea  <- mean(results_ea [results_ea $soln_value <= results_ea $best_known_solution_value,]$time_to_best_solution_seconds)
-bkv_time_its <- mean(results_its[results_its$soln_value <= results_its$best_known_solution_value,]$time_to_best_solution_seconds)
-bkv_time_sa  <- mean(results_sa [results_sa $soln_value <= results_sa $best_known_solution_value,]$time_to_best_solution_seconds)
-
 deviation_bma <- aggregate(results_bma$deviation, by=list(results_bma$instance_name), FUN=mean)$x
 deviation_ea  <- aggregate(results_ea $deviation, by=list(results_ea $instance_name), FUN=mean)$x
 deviation_its <- aggregate(results_its$deviation, by=list(results_its$instance_name), FUN=mean)$x
@@ -98,6 +93,30 @@ time_ea  <- aggregate(results_ea $time_to_best_solution_seconds, by=list(results
 time_its <- aggregate(results_its$time_to_best_solution_seconds, by=list(results_its$instance_name), FUN=mean)$x
 time_sa  <- aggregate(results_sa $time_to_best_solution_seconds, by=list(results_sa $instance_name), FUN=mean)$x
 
+sorted_soln_value_bma <- aggregate(results_bma$soln_value, by=list(results_bma$instance_name), FUN=mean)$x
+sorted_soln_value_ea  <- aggregate(results_ea $soln_value, by=list(results_ea $instance_name), FUN=mean)$x
+sorted_soln_value_its <- aggregate(results_its$soln_value, by=list(results_its$instance_name), FUN=mean)$x
+sorted_soln_value_sa  <- aggregate(results_sa $soln_value, by=list(results_sa $instance_name), FUN=mean)$x
+
+sorted_bkv_bma <- aggregate(results_bma$best_known_solution_value, by=list(results_bma$instance_name), FUN=mean)$x
+sorted_bkv_ea  <- aggregate(results_ea $best_known_solution_value, by=list(results_ea $instance_name), FUN=mean)$x
+sorted_bkv_its <- aggregate(results_its$best_known_solution_value, by=list(results_its$instance_name), FUN=mean)$x
+sorted_bkv_sa  <- aggregate(results_sa $best_known_solution_value, by=list(results_sa $instance_name), FUN=mean)$x
+
+bkv_indices_bma <- sorted_soln_value_bma <= sorted_bkv_bma
+bkv_indices_ea  <- sorted_soln_value_ea  <= sorted_bkv_ea
+bkv_indices_its <- sorted_soln_value_its <= sorted_bkv_its
+bkv_indices_sa  <- sorted_soln_value_sa  <= sorted_bkv_sa
+
+avg_bkv_times_bma <- mean(time_bma[bkv_indices_bma])
+avg_bkv_times_ea  <- mean(time_ea [bkv_indices_ea ])
+avg_bkv_times_its <- mean(time_its[bkv_indices_its])
+avg_bkv_times_sa  <- mean(time_sa [bkv_indices_sa ])
+
+bkv_time_bma <- mean(results_bma[results_bma$soln_value <= results_bma$best_known_solution_value,]$time_to_best_solution_seconds)
+bkv_time_ea  <- mean(results_ea [results_ea $soln_value <= results_ea $best_known_solution_value,]$time_to_best_solution_seconds)
+bkv_time_its <- mean(results_its[results_its$soln_value <= results_its$best_known_solution_value,]$time_to_best_solution_seconds)
+bkv_time_sa  <- mean(results_sa [results_sa $soln_value <= results_sa $best_known_solution_value,]$time_to_best_solution_seconds)
 
 sorted_names <- aggregate(results_bma$deviation, by=list(results_bma$instance_name), FUN=mean)
 sorted_sizes <- as.numeric(gsub("\\D", "", sorted_names$Group.1))
@@ -203,9 +222,9 @@ dev.off()
 
 test_result <- friedman.test(results_mat)
 
-wilcox.test(deviation_bma, deviation_its, paired = TRUE, alternative = "less")
-wilcox.test(deviation_bma, deviation_ea , paired = TRUE, alternative = "less")
-wilcox.test(deviation_bma, deviation_sa , paired = TRUE, alternative = "less")
-wilcox.test(deviation_its, deviation_ea , paired = TRUE, alternative = "less")
-wilcox.test(deviation_its, deviation_sa , paired = TRUE, alternative = "less")
-wilcox.test(deviation_ea , deviation_sa , paired = TRUE, alternative = "less")
+wilcox.test(deviation_bma, deviation_its, paired = TRUE, alternative = "greater")
+wilcox.test(deviation_bma, deviation_ea , paired = TRUE, alternative = "greater")
+wilcox.test(deviation_bma, deviation_sa , paired = TRUE, alternative = "greater")
+wilcox.test(deviation_its, deviation_ea , paired = TRUE, alternative = "greater")
+wilcox.test(deviation_its, deviation_sa , paired = TRUE, alternative = "greater")
+wilcox.test(deviation_ea , deviation_sa , paired = TRUE, alternative = "greater")

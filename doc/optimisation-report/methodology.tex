@@ -1,83 +1,193 @@
 \subsection{Metaheuristics considered} {
-    \subsubsection{Metaheuristics considered} {
-        This work compares four metaheuristics:
-        \begin{itemize}
-            \item Simulated Annealing \citep{kirkpatrick:1983op, vcerny:1985th};
-            \item Iterated tabu search \citep{Misevicius:2012dj};
-            \item BMA \citep{Benlic:2015gp};
-            \item A simple evolutionary algorithm.
-        \end{itemize}
+\label{sec:algorithms-considered}
+    This work compares four metaheuristics:
+    \begin{itemize}
+        \item Simulated Annealing \citep{kirkpatrick:1983op, vcerny:1985th};
+        \item Iterated tabu search (ITS) \citep{Misevicius:2012dj};
+        \item BMA \citep{Benlic:2015gp};
+        \item A simple evolutionary algorithm.
+    \end{itemize}
+    The ITS and BMA algorithms were discussed in some detail in Section~\ref{sec:approaches}, but additional details on the implementation of each of these methods, and the parameter values used, are included in the following sections.
+
+    % \subsubsection{Neighbourhood evaluation} {
+    %     \todo{Indicate the importance of neighbourhood evaluation speed.
+    %      Describe neighbourhood evaluation method, and indicate that the fast methods were not used.}
+    %
+    %      \label{eq:qap-swap-delta}
+    % }
+
+    \subsubsection{Simulated annealing} {
+    \label{sec:method-sa}
+
+        {\newterm{Simulated annealing} (SA) is a metaheuristic independently introduced by \citet{kirkpatrick:1983op} and \citet{vcerny:1985th}.
+        Simulated annealing is intended to mimic the metallurgical process of annealing, where controlled cooling of metals leads to a desirably predictable crystal structure.
+        The algorithm models this by performing a random search that is influenced by a \newterm{temperature} parameter, which in turn, is controlled by a \newterm{cooling schedule}.
+        For the QAP, the search is initialised with a random permutation, and maintains a single \scarequotes{current solution} at each step.
+        Then at each step, a random permutation from the 2-swap neighbourhood is selected.
+        The selected permutation is either accepted as the new current solution or rejected probabilistically, based on the current temperature.
+        Moves that would increase the value of the current solution are always accepted, and non-improving moves are selected probabilistically, with a greater likelihood for higher values of the temperature parameter and lower differences in solution value.
+        The temperature parameter begins at a \scarequotes{large} value and is decreased as the search progresses according to the cooling schedule. The temperature is typically a function of the number of iterations performed, or the current time, and may take a maximum iteration count of time limit into account to ensure that enough cooling occurs during the search.
+
+        The implementation of simulated annealing used in this work simply used a linear cooling schedule, which decreased the temperature from an initial value \(T_0 = 50000\) to 0 as the elapsed time \(t\) increased from 0 up to the time limit \(\text{max}\).
+        The probability of accepting a solution that increased the solution value by \(\Delta{v}\) was determined by the expression
+
+        \[
+            \operatorname{exp}\left({\frac{-\Delta{v}}{50000(1 - \frac{t}{T_\text{max}})}}\right).
+        \]
+
+        Due to an oversight in the implementation of the simulated annealing algorithm, the value of each solution visited is computed in full using \eqref{eq:qap} rather than using the faster solution difference method used by the other algorithms.
+        It would be expected that the results achieved would be improved had the faster cost evaluation method been used.
     }
 
     \subsubsection{Iterated tabu search (ITS) \citep{Misevicius:2012dj}} {
-        Alternates two steps:
-        \begin{enumerate}
-            \item \newterm{Controlled chained mutation}
-                \begin{itemize}
-                    \item Performs a \newterm{chained mutation}
-                    \item Chooses the most \newterm{disruptive} mutation from a set
-                    \item Controls mutation size and disruptiveness
-                \end{itemize}
-            \item \newterm{Improved robust tabu-search}
-                Tabu search with extra rules to deter \scarequotes{stagnant behaviour}:
-                \begin{itemize}
-                    \item periodically performs steepest descent search
-                    \item periodically ignores the tabu-list
-                    \item halves all tabu-counts when a new local optimum is reached
-                \end{itemize}
-        \end{enumerate}
+    \label{sec:method-its}
+        % Alternates two steps:
+        % \begin{enumerate}
+        %     \item \newterm{Controlled chained mutation}
+        %         \begin{itemize}
+        %             \item Performs a \newterm{chained mutation}
+        %             \item Chooses the most \newterm{disruptive} mutation from a set
+        %             \item Controls mutation size and disruptiveness
+        %         \end{itemize}
+        %     \item \newterm{Improved robust tabu-search}
+        %         Tabu search with extra rules to deter \scarequotes{stagnant behaviour}:
+        %         \begin{itemize}
+        %             \item periodically performs steepest descent search
+        %             \item periodically ignores the tabu-list
+        %             \item halves all tabu-counts when a new local optimum is reached
+        %         \end{itemize}
+        % \end{enumerate}
+
+        The parameters used for the iterated tabu search algorithm were based on the parameters suggested by \citet{Misevicius:2012dj} for the artificial problem instances in QAPLIB.
+        These parameters were found to perform generally well, and are presented in Table~\ref{tab:params-its}.
+
+        \begin{table}[h]
+            \centering
+            \caption{Parameters used for the ITS algorithm.}
+            \label{tab:params-its}
+            \begin{tabularx}{0.45\textwidth}{@{}c|c@{}}
+                \toprule
+                Parameter & Value \\
+                \midrule
+                \(Q\)       & \(25n\) \\
+                \(W\)       & \(n\) \\
+                \([\mu_\text{min}, \mu_\text{max}]\)   & \([0.3n, 0.5n]\) \\
+                \([h_\text{low}, h_\text{high}]\) & %
+                \(\begin{cases} %
+                    [0.2n, 0.4n], & \text{if } n > 50 \\ %
+                    [0.1n, 0.2n], & \text{otherwise} %
+                \end{cases}\) \\
+                \(\alpha\)  & 5\% \\
+                \(I_1\)     & \(2n\) \\
+                \(I_2\)     & \(0.5n\) \\
+                \(\eta\)    & \(0.3n\) \\
+                \(\lambda\) & 10 \\
+                \bottomrule
+            \end{tabularx}
+        \end{table}
     }
 
     \subsubsection{BMA \citep{Benlic:2015gp}} {
-        BMA has the following features:
-        \begin{description}
-            \item[Local search:] Breakout local search (BLS) \citep{Benlic:2013gi};
-            \item[Crossover:] \scarequotes{The} uniform crossover (UX) operator;
-            \item[Mutation:] Chained sequence mutation.
-        \end{description}
+    \label{sec:method-bma}
+        % BMA has the following features:
+        % \begin{description}
+        %     \item[Local search:] Breakout local search (BLS) \citep{Benlic:2013gi};
+        %     \item[Crossover:] \scarequotes{The} uniform crossover (UX) operator;
+        %     \item[Mutation:] Chained sequence mutation.
+        % \end{description}
+
+        The parameters used for the BMA algorithm were based on the parameters suggested by \citet{Benlic:2015gp}.
+        It was found that the values of the \(t_s\) and \(t_l\) parameters, which define the short and long BLS search iteration counts, used by \citeauthor{Benlic:2015gp} were far too high for the implementation of BMA created, and caused the algorithm to take too long to complete.
+        These parameters were reduced by several orders of magnitude, and were additionally decreased with the problem size to ensure that larger problems did not run for a disproportionately long time.
+        These parameters used are presented in Table~\ref{tab:params-bma}.
+
+        \begin{table}[h]
+            \centering
+            \caption{Parameters used for the BMA algorithm.}
+            \label{tab:params-bma}
+            \begin{tabularx}{0.3\textwidth}{@{}c|c@{}}
+                \toprule
+                Parameter & Value \\
+                \midrule
+                \(N\)  & 15 \\
+                \(t_s\)  & \(\operatorname{max}(1, \frac{256}{n})\) \\
+                \(t_l\)  & \(\operatorname{max}(1, \frac{512}{n})\) \\
+                \(\mu_\text{min}\) & \(0.5n\) \\
+                \(m\) & \(\operatorname{max}(1, 0.1n)\) \\
+                \(p_\text{mutate}\)  & 75\% \\
+                \(\lambda\)  & 4 \\
+                \(\nu\) & \(15\) \\
+                \(L_0\) & \(\operatorname{max}(1, 0.1n)\) \\
+                \(\gamma\) & \([0.9n, 1.1n]\) \\
+                \(Q\) & 75\% \\
+                \(\nu_\text{BLS}\) & \(25\) \\
+                \(R\) & 70\% \\
+                \bottomrule
+            \end{tabularx}
+        \end{table}
     }
 
-    \subsubsection{Breakout local search (BLS)} {
-        `Breakout local search for the quadratic assignment problem' \citep{Benlic:2013gi}.
-
-        Each iteration:
-        \begin{enumerate}
-            \item Perform steepest descent search using a 2-swap neighbourhood.
-            \item Perform a number of perturbation moves:
-                \begin{itemize}
-                    \item Either random moves or tabu search moves;
-                    \item Perturbation type chosen based on last improving iteration;
-                    \item Number of moves increases with visits to the same local optimum;
-                \end{itemize}
-        \end{enumerate}
-    }
+    % \subsubsection{Breakout local search (BLS)} {
+    %     `Breakout local search for the quadratic assignment problem' \citep{Benlic:2013gi}.
+    %
+    %     Each iteration:
+    %     \begin{enumerate}
+    %         \item Perform steepest descent search using a 2-swap neighbourhood.
+    %         \item Perform a number of perturbation moves:
+    %             \begin{itemize}
+    %                 \item Either random moves or tabu search moves;
+    %                 \item Perturbation type chosen based on last improving iteration;
+    %                 \item Number of moves increases with visits to the same local optimum;
+    %             \end{itemize}
+    %     \end{enumerate}
+    % }
 
     \subsubsection{Evolutionary algorithm} {
-        An evolutionary algorithm without a local improvement method:
-        \begin{itemize}
-            \item Maintains a population of \(N\) solutions;
-            \item Each iteration:
-            \begin{enumerate}
-                \item Remove all but the \(K\) best solutions from the population.
-                \item Generate \(N-K\) new individuals using either crossover or mutation, chosen randomly:
-                    \begin{itemize}
-                        \item Chained sequence mutation
-                        \item Uniform crossover
-                    \end{itemize}
-            \end{enumerate}
-        \end{itemize}
+    \label{sec:method-ea}
+
+        A simple evolutionary algorithm was implemented to compare the performance of a population-based approach that did not use a local improvement method with the other algorithms considered.
+        The implementation of the memetic algorithm described by \citep{Harris:2015kw} was originally planned instead, but could not be completed due to time constraints.
+
+        The evolutionary algorithm maintained a population of \(N\) solutions, which are initialised randomly.
+        Each iteration of the algorithm, all but the \(K\) best solutions are removed from the population, and replaced by \(N-K\) new individuals.
+        Each new individual is generated either by mutation of a champion solution or by crossover between a champion and a random individual from the previous population.
+        The generation method is determined probabilistically, where the probability of mutation is \(p_\text{mutate}\).
+        The mutation method used is the chained sequence mutation method used in the BMA and ITS algorithms (without the additional consideration of disruptiveness used in ITS) with a mutation degree parameter \(\mu\) of \(\frac{n}{3}\) where \(n\) is the problem size.
+        The crossover method used is the uniform crossover (UX) used in BMA.
+        The parameters used for the evolutionary algorithm are summarised in Table~\ref{tab:params-ea}.
+
+        \begin{table}[h]
+            \centering
+            \caption{Parameters used for the evolutionary algorithm.}
+            \label{tab:params-ea}
+            \begin{tabularx}{0.25\textwidth}{@{}c|c@{}}
+                \toprule
+                Parameter & Value \\
+                \midrule
+                N  & 40 \\
+                K  & 10 \\
+                \(p_\text{mutate}\)  & 75\% \\
+                \(\mu\) & \(\frac{n}{3}\) \\
+                \bottomrule
+            \end{tabularx}
+        \end{table}
     }
 }
 
 \subsection{Method of comparison} {
-    \subsubsection{Experiment} {
-        The performance of the algorithms was compared on the full set of QAPLIB problems \citep{Burkard:1997ve}.
+% \subsubsection{Experiment} {
+    An experiment was conducted to compare the performance of the four algorithms presented in Section~\ref{sec:algorithms-considered}.
+    Each of the algorithms was implemented, and their performance was compared on the QAPLIB problems \citep{Burkard:1997ve}.
+    The algorithms were written in Rust and compiled with \texttt{rustc 1.3.0} and \texttt{cargo 0.5.0}.
+    Each algorithm was run  all 135 of the 136 problem instances (the trivial instance \texttt{esc16f} was excluded).
+    The time limit for running each algorithm on each problem instance was \SI{10}{\second}.
+    The algorithms were allowed to use the full time limit, and no other stopping criteria were enforced.
+    Experiments were run on an early 2013 Macbook Pro 15'' with a \SI{2.7}{\giga\hertz} Intel Core i7 processor and \SI{16}{\giga\byte} of RAM.
 
-        \begin{itemize}
-            \item Ran each algorithm on all 135 of the 136 problem instances (the trivial instance \texttt{esc16f} was excluded).
-            \item Time limit of \SI{5}{\second} per run.
-            \item Record best solution, time that best solution was found, and actual time taken.
-            \item Test significance of performance difference using Wilcoxon signed rank tests.
-        \end{itemize}
-    }
+    The fast neighbourhood evaluation strategy due to \citet{Frieze:1989iv} was not used for ITS and BMA, however the simpler method presented by \citet{Misevicius:2012dj} was implemented instead.
+    This meant that neighbourhood evaluation was achieved in \(O(n^3)\) time instead of \(O(n^2)\) time as presented in the respective papers.
+
+    The best solution found in each trial, and the time that the best solution was found were recorded.
+    The significance of the observed performance difference between the algorithms was tested using Wilcoxon signed rank tests.
+    % }
 }

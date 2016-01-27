@@ -18,12 +18,20 @@
   \maketitle
 %  \renewcommand{\abstractname}{Executive Summary}
 
-%  \begin{abstract}
-%% \thispagestyle{empty}
-%
-%  \end{abstract}
+ \begin{abstract}
+% \thispagestyle{empty}
 
-  % \newpage
+    The quadratic assignment problem (QAP) is a popular problem for the evaluation of the performance of metaheuristic approaches to solving optimisation problems.
+    Despite the existence of a library of problems intended for benchmarking algorithms for the QAP, called QAPLIB, an objective comparison of the merits of different algorithms can be difficult to infer from the literature due to the different choices authors make on the specifics of the experiments used to evaluate their algorithms.
+    This work compares four metaheuristics based on recent approaches from the literature to solving the QAP.
+    These methods include a memetic algorithm, BMA, a non-population based iterated search method, iterated tabu search, simulated annealing, and a simple evolutionary algorithm without a local search method.
+    The four methods were implemented by the author and compared in an experiment using the full set of QAPLIB problem instances.
+    The results of the experiment indicated that the BMA implementation significantly outperformed the other algorithms.
+    The simple evolutionary algorithm without a tabu-list or local-improvement method was found to be the least effective.
+
+ \end{abstract}
+
+  \newpage
 %  \tableofcontents
   % \newpage
 
